@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import { ChevronDown, ChevronUp, Download, LogOut, Pencil, Plus, Trash2, Upload } from "lucide-react";
 
@@ -17,6 +17,9 @@ import { ModalActions, ModalHeader } from "../shared";
 
 export function SettingsTab(props) {
   const importRef = useRef(null);
+  const [showEmptyCuisines, setShowEmptyCuisines] = useState(false);
+  const [showEmptyCities, setShowEmptyCities] = useState(false);
+  const [showEmptyAreas, setShowEmptyAreas] = useState(false);
   const {
     allDishTags,
     data,
@@ -65,7 +68,39 @@ export function SettingsTab(props) {
     onLogout,
     defaultRestaurantStatsView,
     setDefaultRestaurantStatsView,
+    defaultRestaurantHalalChecked,
+    setDefaultRestaurantHalalChecked,
   } = props;
+
+  const cuisineRows = data.cuisines.map((cuisine) => {
+    const cuisineRestaurants = data.restaurants
+      .map((restaurant) => restaurantsById[restaurant.id] || restaurant)
+      .filter((restaurant) => (restaurant.cuisines || []).includes(cuisine));
+    return { cuisine, cuisineRestaurants };
+  });
+  const visibleCuisineRows = showEmptyCuisines
+    ? cuisineRows
+    : cuisineRows.filter(({ cuisineRestaurants }) => cuisineRestaurants.length > 0);
+
+  const cityRows = cityOptions.map((city) => {
+    const cityRestaurants = data.restaurants
+      .map((restaurant) => restaurantsById[restaurant.id] || restaurant)
+      .filter((restaurant) => restaurant.city === city);
+    return { city, cityRestaurants };
+  });
+  const visibleCityRows = showEmptyCities
+    ? cityRows
+    : cityRows.filter(({ cityRestaurants }) => cityRestaurants.length > 0);
+
+  const areaRows = areaOptions.map((area) => {
+    const areaRestaurants = data.restaurants
+      .map((restaurant) => restaurantsById[restaurant.id] || restaurant)
+      .filter((restaurant) => restaurant.area === area);
+    return { area, areaRestaurants };
+  });
+  const visibleAreaRows = showEmptyAreas
+    ? areaRows
+    : areaRows.filter(({ areaRestaurants }) => areaRestaurants.length > 0);
 
   return (
     <TabsContent value="settings" className="space-y-6">
@@ -80,6 +115,16 @@ export function SettingsTab(props) {
                 <SelectContent>
                   <SelectItem value="cards">KPI</SelectItem>
                   <SelectItem value="rows">Rows</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>Choose whether new restaurant forms default `Halal checked` to checked or unchecked.</div>
+            <div className="max-w-xs">
+              <Select value={defaultRestaurantHalalChecked ? "true" : "false"} onValueChange={setDefaultRestaurantHalalChecked}>
+                <SelectTrigger><SelectValue placeholder="Default halal checked" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="true">Checked</SelectItem>
+                  <SelectItem value="false">Unchecked</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -164,14 +209,15 @@ export function SettingsTab(props) {
         <Card className="rounded-3xl border-0 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="font-bold">Cuisines</CardTitle><Dialog open={cuisineOpen} onOpenChange={setCuisineOpen}><DialogTrigger asChild><Button variant="outline"><Plus className="mr-2 h-4 w-4" /> Add Cuisine</Button></DialogTrigger><DialogContent><ModalHeader title="Add Cuisine" onClose={() => setCuisineOpen(false)} /><div className="space-y-4"><Input value={newCuisine} onChange={(e) => setNewCuisine(e.target.value)} placeholder="Enter cuisine name" /><ModalActions onCancel={() => setCuisineOpen(false)} onSave={addCuisine} saveLabel="Save" /></div></DialogContent></Dialog></CardHeader>
           <CardContent>
-            {data.cuisines.length === 0 ? (
+            <div className="mb-4 flex items-center gap-3">
+              <input id="show-empty-cuisines" type="checkbox" checked={showEmptyCuisines} onChange={(e) => setShowEmptyCuisines(e.target.checked)} />
+              <label htmlFor="show-empty-cuisines" className="text-sm text-slate-600">Show 0-restaurant cuisines</label>
+            </div>
+            {visibleCuisineRows.length === 0 ? (
               <div className="text-sm text-slate-500">No cuisines yet.</div>
             ) : (
               <div className="flex flex-wrap gap-3">
-                {data.cuisines.map((cuisine) => {
-                  const cuisineRestaurants = data.restaurants
-                    .map((restaurant) => restaurantsById[restaurant.id] || restaurant)
-                    .filter((restaurant) => (restaurant.cuisines || []).includes(cuisine));
+                {visibleCuisineRows.map(({ cuisine, cuisineRestaurants }) => {
                   const isExpanded = expandedCuisine === cuisine;
                   return (
                     <div key={cuisine} className={`rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 ${isExpanded ? "min-w-[18rem]" : ""}`}>
@@ -228,14 +274,15 @@ export function SettingsTab(props) {
         <Card className="rounded-3xl border-0 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="font-bold">Cities</CardTitle><Dialog open={cityOpen} onOpenChange={setCityOpen}><DialogTrigger asChild><Button variant="outline"><Plus className="mr-2 h-4 w-4" /> Add City</Button></DialogTrigger><DialogContent><ModalHeader title="Add City" onClose={() => setCityOpen(false)} /><div className="space-y-4"><Input value={newCity} onChange={(e) => setNewCity(e.target.value)} placeholder="Enter city name" /><ModalActions onCancel={() => setCityOpen(false)} onSave={addCity} saveLabel="Save" /></div></DialogContent></Dialog></CardHeader>
           <CardContent>
-            {cityOptions.length === 0 ? (
+            <div className="mb-4 flex items-center gap-3">
+              <input id="show-empty-cities" type="checkbox" checked={showEmptyCities} onChange={(e) => setShowEmptyCities(e.target.checked)} />
+              <label htmlFor="show-empty-cities" className="text-sm text-slate-600">Show 0-restaurant cities</label>
+            </div>
+            {visibleCityRows.length === 0 ? (
               <div className="text-sm text-slate-500">No cities yet.</div>
             ) : (
               <div className="flex flex-wrap gap-3">
-                {cityOptions.map((city) => {
-                  const cityRestaurants = data.restaurants
-                    .map((restaurant) => restaurantsById[restaurant.id] || restaurant)
-                    .filter((restaurant) => restaurant.city === city);
+                {visibleCityRows.map(({ city, cityRestaurants }) => {
                   const isExpanded = expandedCity === city;
                   return (
                     <div key={city} className={`rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 ${isExpanded ? "min-w-[18rem]" : ""}`}>
@@ -292,14 +339,15 @@ export function SettingsTab(props) {
         <Card className="rounded-3xl border-0 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="font-bold">Areas</CardTitle><Dialog open={areaOpen} onOpenChange={setAreaOpen}><DialogTrigger asChild><Button variant="outline"><Plus className="mr-2 h-4 w-4" /> Add Area</Button></DialogTrigger><DialogContent><ModalHeader title="Add Area" onClose={() => setAreaOpen(false)} /><div className="space-y-4"><Input value={newArea} onChange={(e) => setNewArea(e.target.value)} placeholder="Enter area / city" /><ModalActions onCancel={() => setAreaOpen(false)} onSave={addArea} saveLabel="Save" /></div></DialogContent></Dialog></CardHeader>
           <CardContent>
-            {areaOptions.length === 0 ? (
+            <div className="mb-4 flex items-center gap-3">
+              <input id="show-empty-areas" type="checkbox" checked={showEmptyAreas} onChange={(e) => setShowEmptyAreas(e.target.checked)} />
+              <label htmlFor="show-empty-areas" className="text-sm text-slate-600">Show 0-restaurant areas</label>
+            </div>
+            {visibleAreaRows.length === 0 ? (
               <div className="text-sm text-slate-500">No areas yet.</div>
             ) : (
               <div className="flex flex-wrap gap-3">
-                {areaOptions.map((area) => {
-                  const areaRestaurants = data.restaurants
-                    .map((restaurant) => restaurantsById[restaurant.id] || restaurant)
-                    .filter((restaurant) => restaurant.area === area);
+                {visibleAreaRows.map(({ area, areaRestaurants }) => {
                   const isExpanded = expandedArea === area;
                   return (
                     <div key={area} className={`rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 ${isExpanded ? "min-w-[18rem]" : ""}`}>

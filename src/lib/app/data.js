@@ -55,6 +55,7 @@ export function createSampleData() {
   return {
     settings: {
       defaultRestaurantStatsView: "cards",
+      defaultRestaurantHalalChecked: true,
     },
     cuisines: DEFAULT_CUISINES,
     areas: DEFAULT_AREAS,
@@ -683,6 +684,7 @@ export function safeParse(value, fallback) {
 
 export function migrateData(parsed) {
   const defaultRestaurantStatsView = parsed.settings?.defaultRestaurantStatsView === "rows" ? "rows" : "cards";
+  const defaultRestaurantHalalChecked = parsed.settings?.defaultRestaurantHalalChecked ?? true;
 
   const experiences = (parsed.experiences || []).map(({ restaurantId: _restaurantId, ...e }) => ({
     valueForMoney: typeof e.valueForMoney === "number" ? VALUE_OPTIONS[Math.max(0, Math.min(VALUE_OPTIONS.length - 1, e.valueForMoney - 1))] : e.valueForMoney || "",
@@ -752,6 +754,7 @@ export function migrateData(parsed) {
   return {
     settings: {
       defaultRestaurantStatsView,
+      defaultRestaurantHalalChecked,
     },
     cuisines: parsed.cuisines?.length ? parsed.cuisines : DEFAULT_CUISINES,
     areas: parsed.areas?.length ? parsed.areas : DEFAULT_AREAS,

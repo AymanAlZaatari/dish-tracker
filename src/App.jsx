@@ -391,7 +391,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     });
   }, [data, dishExperienceMap, restaurantsById]);
 
-  function resetRestaurantForm() { setRestaurantForm(emptyRestaurantForm); setRestaurantNameError(""); setShowRestaurantNameSuggestions(false); }
+  function resetRestaurantForm() { setRestaurantForm(buildEmptyRestaurantForm()); setRestaurantNameError(""); setShowRestaurantNameSuggestions(false); }
   function resetBranchForm() { setBranchForm(emptyBranchForm); setBranchFormError(""); }
   function resetDishForm() {
     setDishForm(emptyDishForm);
@@ -404,7 +404,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     setExperienceFormError("");
     setExperienceRatingError("");
     setShowInlineRestaurantForDish(false);
-    setInlineRestaurantForDish(inlineRestaurantFormDefault);
+    setInlineRestaurantForDish(buildInlineRestaurantFormDefault());
     setLogExperienceWithDish(true);
   }
   function resetExperienceForm() {
@@ -417,7 +417,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     setShowExperienceDishSuggestions(false);
     setShowInlineRestaurantForExperience(false);
     setShowInlineDishForExperience(false);
-    setInlineRestaurantForExperience(inlineRestaurantFormDefault);
+    setInlineRestaurantForExperience(buildInlineRestaurantFormDefault());
     setInlineDishForExperienceName("");
     setInlineDishForExperienceError("");
   }
@@ -1018,7 +1018,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     setShowRestaurantNameSuggestions(false);
     const defaultBranch = defaultBranchByRestaurantId[r.id];
     setRestaurantForm({
-      ...emptyRestaurantForm,
+      ...buildEmptyRestaurantForm(),
       ...r,
       area: defaultBranch?.area || "",
       city: defaultBranch?.city || "",
@@ -1095,6 +1095,17 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     }));
   }
 
+  function setDefaultRestaurantHalalChecked(value) {
+    const nextValue = value === "false" ? false : true;
+    setData((prev) => ({
+      ...prev,
+      settings: {
+        ...prev.settings,
+        defaultRestaurantHalalChecked: nextValue,
+      },
+    }));
+  }
+
   function importJson(event) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -1128,6 +1139,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   const branchOptionsForDish = data.branches.filter((b) => b.restaurantId === effectiveDishRestaurantId);
   const branchOptionsForDishExperience = data.branches.filter((b) => b.restaurantId === effectiveDishRestaurantId);
   const branchOptionsForExperience = data.branches.filter((b) => b.restaurantId === effectiveExperienceRestaurantId);
+  const defaultRestaurantHalalChecked = data.settings?.defaultRestaurantHalalChecked ?? true;
   const experienceDishCatalogMatches = useMemo(() => {
     const query = normalizeDishName(experienceDishSearch || "");
     if (!query) return [];
@@ -1158,6 +1170,20 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   const hasExactExperienceRestaurantMatch = data.restaurants.some(
     (restaurant) => restaurant.name.trim().toLowerCase() === experienceRestaurantSearch.trim().toLowerCase()
   );
+
+  function buildEmptyRestaurantForm() {
+    return {
+      ...emptyRestaurantForm,
+      halalChecked: defaultRestaurantHalalChecked,
+    };
+  }
+
+  function buildInlineRestaurantFormDefault() {
+    return {
+      ...inlineRestaurantFormDefault,
+      halalChecked: defaultRestaurantHalalChecked,
+    };
+  }
 
   function openExistingDish(dish) {
     editDish(dish);
@@ -2019,6 +2045,8 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
             onLogout={onLogout}
             defaultRestaurantStatsView={defaultRestaurantStatsView}
             setDefaultRestaurantStatsView={setDefaultRestaurantStatsView}
+            defaultRestaurantHalalChecked={defaultRestaurantHalalChecked}
+            setDefaultRestaurantHalalChecked={setDefaultRestaurantHalalChecked}
           />
         </Tabs>
       </div>
