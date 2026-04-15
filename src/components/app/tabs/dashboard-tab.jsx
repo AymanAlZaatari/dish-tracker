@@ -63,8 +63,19 @@ export function DashboardTab({
         </div>
 
         <Card className="rounded-3xl border-0 shadow-sm">
-          <CardHeader className="hidden xl:block"><CardTitle className="font-bold">Recent Experiences</CardTitle></CardHeader>
-          <CardContent className="space-y-3">
+          <CardHeader className="hidden xl:block border-b border-slate-100 pb-4">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <CardTitle className="font-bold">Recent Experiences</CardTitle>
+                <div className="mt-1 text-sm text-slate-500">Latest logged dishes with price, rating, and worth at a glance.</div>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-center">
+                <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-slate-500">Showing</div>
+                <div className="text-sm font-semibold text-slate-900">{recentExperiences.length} items</div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-5">
             {recentExperiences.length === 0 ? <div className="text-sm text-slate-500">No experiences yet.</div> : recentExperiences.map((experience) => {
               const dish = dishesById[experience.dishId];
               const restaurant = dish ? restaurantsById[dish.restaurantId] : null;
@@ -90,8 +101,19 @@ export function DashboardTab({
         </div>
 
         <Card className="rounded-3xl border-0 shadow-sm xl:col-start-auto">
-          <CardHeader className="hidden xl:block"><CardTitle className="font-bold">Restaurants Overview</CardTitle></CardHeader>
-          <CardContent className="space-y-3">
+          <CardHeader className="hidden xl:block border-b border-slate-100 pb-4">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <CardTitle className="font-bold">Restaurants Overview</CardTitle>
+                <div className="mt-1 text-sm text-slate-500">Quick summaries of restaurant activity, ratings, and average dish price.</div>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-center">
+                <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-slate-500">Showing</div>
+                <div className="text-sm font-semibold text-slate-900">{restaurantSummaries.length} items</div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-5">
             {restaurantSummaries.length === 0 ? <div className="text-sm text-slate-500">No restaurants yet.</div> : restaurantSummaries.map((summary) => (
               <RestaurantOverviewCard key={summary.restaurant.id} statsView={defaultStatsView} {...summary} />
             ))}
@@ -108,7 +130,7 @@ function RestaurantOverviewCard({ restaurant, dishesCount, experiencesCount, avg
   const isInlineView = statsView === "rows";
 
   return (
-    <div className="rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/60 sm:p-5">
+    <div className="rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/60 ring-1 ring-slate-100/80 sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 space-y-2">
           <div className="flex items-center gap-2">
@@ -193,7 +215,7 @@ function RecentExperienceCard({ experience, dish, restaurant, branch, statsView,
   const isInlineView = statsView === "rows";
 
   return (
-    <div className="rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/60 sm:p-5">
+    <div className="rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/60 ring-1 ring-slate-100/80 sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 space-y-2">
           <div className="flex items-center gap-2">
@@ -228,7 +250,6 @@ function RecentExperienceCard({ experience, dish, restaurant, branch, statsView,
             ) : null}
           </div>
         </div>
-
       </div>
 
       {(hasPrice || hasValue || hasRating || imageCount > 0) ? (
@@ -294,11 +315,12 @@ function RecentExperienceCard({ experience, dish, restaurant, branch, statsView,
 
       {hasNotes ? (
         <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+          <div className="mb-1 text-[11px] font-bold uppercase tracking-[0.08em] text-slate-500">Notes</div>
           {experience.notes}
         </div>
       ) : null}
 
-      <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
+      <div className="mt-5 flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 pt-4">
         <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${EDIT_BUTTON_STYLE}`} onClick={() => editExperience(experience)}>
           <Pencil className="h-4 w-4 sm:mr-2" />
           <span className="hidden sm:inline">Edit</span>
