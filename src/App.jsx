@@ -1145,9 +1145,9 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                     </div>
                     <Field label="Restaurant rating (1-5)"><Input type="number" min="1" max="5" value={restaurantForm.rating} onChange={(e) => setRestaurantForm({ ...restaurantForm, rating: e.target.value })} /></Field>
                     <Field label="Recommended by"><Input value={restaurantForm.recommendedBy} onChange={(e) => setRestaurantForm({ ...restaurantForm, recommendedBy: e.target.value })} /></Field>
-                    <div className="md:col-span-2 flex flex-wrap items-center gap-x-5 gap-y-3">
-                      <div className="flex items-center gap-3"><Checkbox checked={restaurantForm.halalChecked} onCheckedChange={(checked) => setRestaurantForm({ ...restaurantForm, halalChecked: !!checked })} /><Label>Halal checked</Label></div>
+                    <div className="md:col-span-2 grid grid-cols-2 gap-x-5 gap-y-3 md:flex md:flex-wrap md:items-center">
                       <div className="flex items-center gap-3"><Checkbox checked={restaurantForm.kidsFriendly} onCheckedChange={(checked) => setRestaurantForm({ ...restaurantForm, kidsFriendly: !!checked })} /><Label>Kids friendly</Label></div>
+                      <div className="flex items-center gap-3"><Checkbox checked={restaurantForm.halalChecked} onCheckedChange={(checked) => setRestaurantForm({ ...restaurantForm, halalChecked: !!checked })} /><Label>Halal checked</Label></div>
                       <div className="flex items-center gap-3"><Checkbox checked={restaurantForm.noAlcohol} onCheckedChange={(checked) => setRestaurantForm({ ...restaurantForm, noAlcohol: !!checked })} /><Label>No alcohol</Label></div>
                       <div className="flex items-center gap-3"><Checkbox checked={restaurantForm.noPork} onCheckedChange={(checked) => setRestaurantForm({ ...restaurantForm, noPork: !!checked })} /><Label>No pork</Label></div>
                     </div>
