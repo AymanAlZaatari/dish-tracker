@@ -97,9 +97,11 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   const [tagOpen, setTagOpen] = useState(false);
 
   const [restaurantForm, setRestaurantForm] = useState(emptyRestaurantForm);
+  const [restaurantNameError, setRestaurantNameError] = useState("");
   const [branchForm, setBranchForm] = useState(emptyBranchForm);
   const [branchFormError, setBranchFormError] = useState("");
   const [dishForm, setDishForm] = useState(emptyDishForm);
+  const [dishNameError, setDishNameError] = useState("");
   const [experienceForm, setExperienceForm] = useState(emptyExperienceForm);
   const [experienceFormError, setExperienceFormError] = useState("");
   const [experienceRatingError, setExperienceRatingError] = useState("");
@@ -119,6 +121,8 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   const [expandedCity, setExpandedCity] = useState(null);
 
   const previousExperienceDishIdRef = useRef("");
+  const restaurantNameInputRef = useRef(null);
+  const dishNameInputRef = useRef(null);
 
   const defaultBranchByRestaurantId = useMemo(() => {
     const entries = data.restaurants.map((restaurant) => {
@@ -358,10 +362,11 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     });
   }, [data, dishExperienceMap, restaurantsById]);
 
-  function resetRestaurantForm() { setRestaurantForm(emptyRestaurantForm); }
+  function resetRestaurantForm() { setRestaurantForm(emptyRestaurantForm); setRestaurantNameError(""); }
   function resetBranchForm() { setBranchForm(emptyBranchForm); setBranchFormError(""); }
   function resetDishForm() {
     setDishForm(emptyDishForm);
+    setDishNameError("");
     setDuplicateDishSuggestion(null);
     setShowDishNameSuggestions(false);
     setExperienceFormError("");
@@ -440,7 +445,13 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   }
 
   function saveRestaurant() {
-    if (!restaurantForm.name.trim()) return;
+    if (!restaurantForm.name.trim()) {
+      setRestaurantNameError("Restaurant name is required.");
+      restaurantNameInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      restaurantNameInputRef.current?.focus();
+      return;
+    }
+    setRestaurantNameError("");
     const payload = {
       id: restaurantForm.id || uid(),
       name: restaurantForm.name.trim(),
@@ -540,7 +551,15 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
       }));
     }
 
-    if (!restaurantId || !dishForm.name.trim()) return;
+    if (!dishForm.name.trim()) {
+      setDishNameError("Dish name is required.");
+      dishNameInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      dishNameInputRef.current?.focus();
+      return;
+    }
+    setDishNameError("");
+
+    if (!restaurantId) return;
     const duplicate = data.dishes.find(
       (d) => d.restaurantId === restaurantId && d.name.trim().toLowerCase() === dishForm.name.trim().toLowerCase() && d.id !== dishForm.id
     );
@@ -907,6 +926,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   }
 
   function editRestaurant(r) {
+    setRestaurantNameError("");
     const defaultBranch = defaultBranchByRestaurantId[r.id];
     setRestaurantForm({
       ...emptyRestaurantForm,
@@ -923,6 +943,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   function editBranch(b) { setBranchFormError(""); setBranchForm({ ...emptyBranchForm, ...b }); setBranchOpen(true); }
   function editDish(d) {
     setDishForm({ ...emptyDishForm, ...d, branchId: d.branchId || "none", price: d.price ?? "", recommendationInput: "", alertInput: "", tagInput: "" });
+    setDishNameError("");
     setDuplicateDishSuggestion(null);
     setShowDishNameSuggestions(false);
     setExperienceFormError("");
@@ -1090,7 +1111,20 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                 <DialogContent showCloseButton={false} className="max-h-[90vh] overflow-auto sm:max-w-2xl">
                   <ModalHeader title={restaurantForm.id ? "Edit Restaurant" : "Add Restaurant"} onClose={() => { setRestaurantOpen(false); resetRestaurantForm(); }} />
                   <div className="grid gap-4 md:grid-cols-2">
-                    <div className="md:col-span-2"><Field label="Name"><Input value={restaurantForm.name} onChange={(e) => setRestaurantForm({ ...restaurantForm, name: e.target.value })} /></Field></div>
+                    <div className="md:col-span-2">
+                      <Field label={<><span>Name</span><span className="ml-1 text-red-600">*</span></>}>
+                        <Input
+                          ref={restaurantNameInputRef}
+                          value={restaurantForm.name}
+                          onChange={(e) => {
+                            setRestaurantForm({ ...restaurantForm, name: e.target.value });
+                            if (e.target.value.trim()) setRestaurantNameError("");
+                          }}
+                          className={restaurantNameError ? "border-red-400 focus-visible:ring-red-400" : ""}
+                        />
+                      </Field>
+                      {restaurantNameError ? <div className="mt-2 text-sm text-red-600">{restaurantNameError}</div> : null}
+                    </div>
                     <Field label="Default branch city">
                       <Input
                         list="restaurant-city-options"
@@ -1210,18 +1244,22 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                       )}
                     </Field>
                     <div className="relative md:col-span-2">
-                      <Field label="Dish name">
+                      <Field label={<><span>Dish name</span><span className="ml-1 text-red-600">*</span></>}>
                         <Input
+                          ref={dishNameInputRef}
                           value={dishForm.name}
                           onChange={(e) => {
                             setDishForm({ ...dishForm, name: e.target.value });
+                            if (e.target.value.trim()) setDishNameError("");
                             setShowDishNameSuggestions(true);
                           }}
                           onFocus={() => setShowDishNameSuggestions(true)}
                           onBlur={() => window.setTimeout(() => setShowDishNameSuggestions(false), 150)}
                           placeholder="Start typing a dish name"
+                          className={dishNameError ? "border-red-400 focus-visible:ring-red-400" : ""}
                         />
                       </Field>
+                      {dishNameError ? <div className="mt-2 text-sm text-red-600">{dishNameError}</div> : null}
                       {showDishNameSuggestions && dishCatalogMatches.length > 0 && (
                         <div className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-2xl border bg-white shadow-lg">
                           {dishCatalogMatches.map((dish) => {
