@@ -252,8 +252,8 @@ export function RestaurantsTab({
             const areDishesExpanded = expandAllDishes || expandedDishRestaurantIds.includes(restaurant.id);
             return (
               <Card key={restaurant.id} className="rounded-3xl border-2 border-slate-200 bg-white shadow-sm">
-                <CardHeader className="px-6 pt-6 pb-4 flex flex-row items-start justify-between gap-4 space-y-0">
-                  <div>
+                <CardHeader className="flex flex-col gap-4 space-y-0 px-4 pt-5 pb-4 sm:px-6 sm:pt-6 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
                     <CardTitle className="text-2xl font-bold tracking-tight">{restaurant.name}</CardTitle>
                     <div className="mt-3 flex flex-wrap gap-2.5 text-xs text-slate-600">
                       {restaurant.area && <Badge variant="secondary">{restaurant.area}</Badge>}
@@ -265,12 +265,12 @@ export function RestaurantsTab({
                       {!restaurant.noPork && <Badge className="!border-red-200 !bg-red-100 !text-red-700">Pork</Badge>}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                     <Button variant="outline" size="sm" className={EDIT_BUTTON_STYLE} onClick={() => editRestaurant(restaurant)}><Pencil className="mr-2 h-4 w-4" /> Edit</Button>
                     <Button variant="outline" size="sm" className={DELETE_BUTTON_STYLE} onClick={() => deleteRestaurant(restaurant.id)}><Trash2 className="mr-2 h-4 w-4" /> Delete</Button>
                   </div>
                 </CardHeader>
-                <CardContent className="px-6 pb-6 space-y-4 text-sm text-slate-600">
+                <CardContent className="space-y-4 px-4 pb-5 text-sm text-slate-600 sm:px-6 sm:pb-6">
                   <div className="grid gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:gap-3 sm:p-4">
                     {statsView === "cards" ? (
                       <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -357,8 +357,9 @@ export function RestaurantsTab({
                           const dishAvgRating = computedDishRating(dish.id);
                           const tagSummary = summarizeTags(dish.tags);
                           return (
-                            <div key={dish.id} className="flex items-start justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-3">
-                              <div className="min-w-0">
+                            <div key={dish.id} className="rounded-2xl border border-slate-200 bg-white p-3">
+                              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                                <div className="min-w-0">
                                 <div className="font-medium text-slate-900">{dish.name}</div>
                                 <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-600">
                                   {dish.isWishlist ? <Badge className="!border-amber-200 !bg-amber-100 !text-amber-800">Wishlist</Badge> : <Badge className="!border-emerald-200 !bg-emerald-100 !text-emerald-800">Tried</Badge>}
@@ -379,14 +380,15 @@ export function RestaurantsTab({
                                     <span>{dish.price != null ? `$${Number(dish.price).toFixed(1)}` : "—"}</span>
                                   </div>
                                 </div>
-                              </div>
-                              <div className="flex shrink-0 items-center gap-2">
-                                <Button variant="outline" size="sm" className={VIEW_BUTTON_STYLE} onClick={() => editDish(dish)} aria-label={`View ${dish.name}`}>
-                                  <Eye className="h-4 w-4" />
-                                </Button>
-                                <Button variant="outline" size="sm" className={LOG_BUTTON_STYLE} onClick={() => prepareLogExperience(dish.restaurantId, dish.id)} aria-label={`Log experience for ${dish.name}`}>
-                                  <NotebookText className="h-4 w-4" />
-                                </Button>
+                                </div>
+                                <div className="flex shrink-0 items-center justify-end gap-2 sm:justify-start">
+                                  <Button variant="outline" size="sm" className={VIEW_BUTTON_STYLE} onClick={() => editDish(dish)} aria-label={`View ${dish.name}`}>
+                                    <Eye className="h-4 w-4" />
+                                  </Button>
+                                  <Button variant="outline" size="sm" className={LOG_BUTTON_STYLE} onClick={() => prepareLogExperience(dish.restaurantId, dish.id)} aria-label={`Log experience for ${dish.name}`}>
+                                    <NotebookText className="h-4 w-4" />
+                                  </Button>
+                                </div>
                               </div>
                             </div>
                           );
