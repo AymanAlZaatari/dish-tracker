@@ -952,7 +952,20 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     setExperienceForm(emptyExperienceForm);
     setDishOpen(true);
   }
-  function editExperience(e) { setExperienceFormError(""); setExperienceRatingError(""); setExperienceForm({ ...emptyExperienceForm, ...e, branchId: e.branchId || "none", rating: e.rating ?? "", price: e.price ?? "", valueForMoney: e.valueForMoney || "" }); setExperienceOpen(true); }
+  function editExperience(e) {
+    setExperienceFormError("");
+    setExperienceRatingError("");
+    setExperienceForm({
+      ...emptyExperienceForm,
+      ...e,
+      restaurantId: dishesById[e.dishId]?.restaurantId || "",
+      branchId: e.branchId || "none",
+      rating: e.rating ?? "",
+      price: e.price ?? "",
+      valueForMoney: e.valueForMoney || "",
+    });
+    setExperienceOpen(true);
+  }
 
   function prepareLogExperience(_restaurantId, dishId) {
     const dish = dishesById[dishId];
