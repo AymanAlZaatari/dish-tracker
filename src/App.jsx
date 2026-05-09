@@ -31,11 +31,15 @@ import {
   LOG_EXPERIENCE_BUTTON_STYLE,
   ORDER_TYPES,
   PORTION_SIZES,
+  RESTAURANT_ALERT_LEVELS,
+  RESTAURANT_SAFETY_FIELDS,
   SAVE_BUTTON_STYLE,
   SECTION_CONTAINER,
   STORAGE_KEY,
   TOP_ACTION_BUTTON_STYLES,
   TOP_NAV_STYLES,
+  TRI_STATE_OPTIONS,
+  TRI_STATE_VALUES,
   VALUE_OPTIONS,
   VIEW_BUTTON_STYLE,
 } from "./lib/app/constants";
@@ -56,6 +60,7 @@ import {
   migrateData,
   normalizeDishName,
   normalizeNumericInput,
+  normalizeTriState,
   ratingPillClass,
   safeParse,
   serializeData,
@@ -87,6 +92,57 @@ function rankSuggestions(items, query, getLabel) {
       return a.label.localeCompare(b.label);
     })
     .map(({ item }) => item);
+}
+
+function TriStateSegmented({ label, value, onChange, compact = false }) {
+  const currentValue = normalizeTriState(value);
+
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <Label className="min-w-0 flex-1 text-sm font-medium leading-tight text-slate-700">{label}</Label>
+      <div className="inline-grid shrink-0 grid-cols-3 overflow-hidden rounded-lg border border-slate-200 bg-white text-xs">
+        {TRI_STATE_OPTIONS.map((option) => {
+          const isActive = currentValue === option.value;
+          const selectedClass = option.value === TRI_STATE_VALUES.YES
+            ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100 focus-visible:bg-emerald-100"
+            : option.value === TRI_STATE_VALUES.NO
+              ? "bg-red-100 text-red-800 hover:bg-red-100 focus-visible:bg-red-100"
+              : "bg-yellow-100 text-yellow-800 hover:bg-yellow-100 focus-visible:bg-yellow-100";
+          return (
+            <button
+              key={option.value}
+              type="button"
+              className={[
+                "h-8 min-w-9 px-2 font-medium text-slate-500 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300",
+                option.value !== TRI_STATE_VALUES.YES ? "border-l border-slate-200" : "",
+                isActive ? selectedClass : "",
+              ].filter(Boolean).join(" ")}
+              onClick={() => onChange(option.value)}
+              aria-pressed={isActive}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function RestaurantSafetyControls({ values, onChange, compact = false }) {
+  return (
+    <div className={compact ? "grid gap-2 sm:grid-cols-2" : "grid gap-2 sm:grid-cols-2 md:grid-cols-4"}>
+      {RESTAURANT_SAFETY_FIELDS.map((field) => (
+        <TriStateSegmented
+          key={field.key}
+          label={field.label}
+          value={values[field.key]}
+          compact={compact}
+          onChange={(value) => onChange(field.key, value)}
+        />
+      ))}
+    </div>
+  );
 }
 
 function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout }) {
@@ -358,7 +414,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
       if (restaurantAreaFilter !== "all" && restaurant.area !== restaurantAreaFilter) return false;
       if (restaurantCityFilter !== "all" && restaurant.city !== restaurantCityFilter) return false;
       if (restaurantCuisineFilter !== "all" && !(restaurant.cuisines || []).includes(restaurantCuisineFilter)) return false;
-      if (restaurantKidsFilter === "kids" && !restaurant.kidsFriendly) return false;
+      if (restaurantKidsFilter === "kids" && normalizeTriState(restaurant.kidsFriendly) !== TRI_STATE_VALUES.YES) return false;
       return true;
     });
   }, [data.branches, data.dishes, data.restaurants, restaurantAreaFilter, restaurantCityFilter, restaurantCuisineFilter, restaurantKidsFilter, restaurantSearch, restaurantsById]);
@@ -454,10 +510,10 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
       rating: form.rating ? Number(form.rating) : null,
       notes: form.notes.trim(),
       recommendedBy: form.recommendedBy.trim(),
-      halalChecked: !!form.halalChecked,
-      kidsFriendly: !!form.kidsFriendly,
-      noAlcohol: !!form.noAlcohol,
-      noPork: !!form.noPork,
+      halalChecked: normalizeTriState(form.halalChecked),
+      kidsFriendly: normalizeTriState(form.kidsFriendly),
+      noAlcohol: normalizeTriState(form.noAlcohol),
+      noPork: normalizeTriState(form.noPork),
     };
   }
 
@@ -502,10 +558,10 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
       rating: restaurantForm.rating ? Number(restaurantForm.rating) : null,
       notes: restaurantForm.notes.trim(),
       recommendedBy: restaurantForm.recommendedBy.trim(),
-      halalChecked: !!restaurantForm.halalChecked,
-      kidsFriendly: !!restaurantForm.kidsFriendly,
-      noAlcohol: !!restaurantForm.noAlcohol,
-      noPork: !!restaurantForm.noPork,
+      halalChecked: normalizeTriState(restaurantForm.halalChecked),
+      kidsFriendly: normalizeTriState(restaurantForm.kidsFriendly),
+      noAlcohol: normalizeTriState(restaurantForm.noAlcohol),
+      noPork: normalizeTriState(restaurantForm.noPork),
     };
 
     setData((prev) => {
@@ -1026,6 +1082,10 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
       mapsLink: defaultBranch?.mapsLink || "",
       cuisineInput: "",
       rating: r.rating ?? "",
+      halalChecked: normalizeTriState(r.halalChecked),
+      kidsFriendly: normalizeTriState(r.kidsFriendly),
+      noAlcohol: normalizeTriState(r.noAlcohol),
+      noPork: normalizeTriState(r.noPork),
     });
     setRestaurantOpen(true);
   }
@@ -1095,13 +1155,29 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     }));
   }
 
-  function setDefaultRestaurantHalalChecked(value) {
-    const nextValue = value === "false" ? false : true;
+  function setRestaurantSafetyDefault(fieldKey, value) {
     setData((prev) => ({
       ...prev,
       settings: {
         ...prev.settings,
-        defaultRestaurantHalalChecked: nextValue,
+        restaurantSafetyDefaults: {
+          ...(prev.settings?.restaurantSafetyDefaults || {}),
+          [fieldKey]: normalizeTriState(value),
+        },
+      },
+    }));
+  }
+
+  function setRestaurantAlertLevel(fieldKey, value) {
+    const nextValue = RESTAURANT_ALERT_LEVELS.some((level) => level.value === value) ? value : "no_or_unknown";
+    setData((prev) => ({
+      ...prev,
+      settings: {
+        ...prev.settings,
+        restaurantAlertLevels: {
+          ...(prev.settings?.restaurantAlertLevels || {}),
+          [fieldKey]: nextValue,
+        },
       },
     }));
   }
@@ -1139,7 +1215,20 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   const branchOptionsForDish = data.branches.filter((b) => b.restaurantId === effectiveDishRestaurantId);
   const branchOptionsForDishExperience = data.branches.filter((b) => b.restaurantId === effectiveDishRestaurantId);
   const branchOptionsForExperience = data.branches.filter((b) => b.restaurantId === effectiveExperienceRestaurantId);
-  const defaultRestaurantHalalChecked = data.settings?.defaultRestaurantHalalChecked ?? true;
+  const restaurantSafetyDefaults = Object.fromEntries(
+    RESTAURANT_SAFETY_FIELDS.map((field) => [
+      field.key,
+      normalizeTriState(data.settings?.restaurantSafetyDefaults?.[field.key], TRI_STATE_VALUES.UNKNOWN),
+    ])
+  );
+  const restaurantAlertLevels = Object.fromEntries(
+    RESTAURANT_SAFETY_FIELDS.map((field) => [
+      field.key,
+      ["no_only", "never"].includes(data.settings?.restaurantAlertLevels?.[field.key])
+        ? data.settings.restaurantAlertLevels[field.key]
+        : "no_or_unknown",
+    ])
+  );
   const experienceDishCatalogMatches = useMemo(() => {
     const query = normalizeDishName(experienceDishSearch || "");
     if (!query) return [];
@@ -1174,14 +1263,14 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   function buildEmptyRestaurantForm() {
     return {
       ...emptyRestaurantForm,
-      halalChecked: defaultRestaurantHalalChecked,
+      ...restaurantSafetyDefaults,
     };
   }
 
   function buildInlineRestaurantFormDefault() {
     return {
       ...inlineRestaurantFormDefault,
-      halalChecked: defaultRestaurantHalalChecked,
+      ...restaurantSafetyDefaults,
     };
   }
 
@@ -1409,11 +1498,11 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                     </div>
                     <Field label="Restaurant rating (1-5)"><Input type="number" min="1" max="5" value={restaurantForm.rating} onChange={(e) => setRestaurantForm({ ...restaurantForm, rating: e.target.value })} /></Field>
                     <Field label="Recommended by"><Input value={restaurantForm.recommendedBy} onChange={(e) => setRestaurantForm({ ...restaurantForm, recommendedBy: e.target.value })} /></Field>
-                    <div className="md:col-span-2 grid grid-cols-2 gap-x-5 gap-y-3 md:flex md:flex-wrap md:items-center">
-                      <div className="flex items-center gap-3"><Checkbox checked={restaurantForm.kidsFriendly} onCheckedChange={(checked) => setRestaurantForm({ ...restaurantForm, kidsFriendly: !!checked })} /><Label>Kids friendly</Label></div>
-                      <div className="flex items-center gap-3"><Checkbox checked={restaurantForm.halalChecked} onCheckedChange={(checked) => setRestaurantForm({ ...restaurantForm, halalChecked: !!checked })} /><Label>Halal checked</Label></div>
-                      <div className="flex items-center gap-3"><Checkbox checked={restaurantForm.noAlcohol} onCheckedChange={(checked) => setRestaurantForm({ ...restaurantForm, noAlcohol: !!checked })} /><Label>No alcohol</Label></div>
-                      <div className="flex items-center gap-3"><Checkbox checked={restaurantForm.noPork} onCheckedChange={(checked) => setRestaurantForm({ ...restaurantForm, noPork: !!checked })} /><Label>No pork</Label></div>
+                    <div className="md:col-span-2">
+                      <RestaurantSafetyControls
+                        values={restaurantForm}
+                        onChange={(fieldKey, value) => setRestaurantForm((prev) => ({ ...prev, [fieldKey]: value }))}
+                      />
                     </div>
                     <div className="md:col-span-2"><Field label="Notes"><Textarea value={restaurantForm.notes} onChange={(e) => setRestaurantForm({ ...restaurantForm, notes: e.target.value })} rows={4} /></Field></div>
                   </div>
@@ -1492,12 +1581,11 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                             setInputValue={(v) => setInlineRestaurantForDish((prev) => ({ ...prev, cuisineInput: v }))}
                             suggestions={data.cuisines}
                           />
-                          <div className="flex gap-4">
-                            <div className="flex items-center gap-2"><Checkbox checked={inlineRestaurantForDish.kidsFriendly} onCheckedChange={(checked) => setInlineRestaurantForDish({ ...inlineRestaurantForDish, kidsFriendly: !!checked })} /><Label>Kids friendly</Label></div>
-                            <div className="flex items-center gap-2"><Checkbox checked={inlineRestaurantForDish.halalChecked} onCheckedChange={(checked) => setInlineRestaurantForDish({ ...inlineRestaurantForDish, halalChecked: !!checked })} /><Label>Halal checked</Label></div>
-                            <div className="flex items-center gap-2"><Checkbox checked={inlineRestaurantForDish.noAlcohol} onCheckedChange={(checked) => setInlineRestaurantForDish({ ...inlineRestaurantForDish, noAlcohol: !!checked })} /><Label>No alcohol</Label></div>
-                            <div className="flex items-center gap-2"><Checkbox checked={inlineRestaurantForDish.noPork} onCheckedChange={(checked) => setInlineRestaurantForDish({ ...inlineRestaurantForDish, noPork: !!checked })} /><Label>No pork</Label></div>
-                          </div>
+                          <RestaurantSafetyControls
+                            values={inlineRestaurantForDish}
+                            compact
+                            onChange={(fieldKey, value) => setInlineRestaurantForDish((prev) => ({ ...prev, [fieldKey]: value }))}
+                          />
                           <button type="button" className="text-sm text-slate-600 underline" onClick={() => { setShowInlineRestaurantForDish(false); setInlineRestaurantForDish(inlineRestaurantFormDefault); }}>
                             Back to existing restaurants
                           </button>
@@ -1735,12 +1823,11 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                             setInputValue={(v) => setInlineRestaurantForExperience((prev) => ({ ...prev, cuisineInput: v }))}
                             suggestions={data.cuisines}
                           />
-                          <div className="flex gap-4">
-                            <div className="flex items-center gap-2"><Checkbox checked={inlineRestaurantForExperience.kidsFriendly} onCheckedChange={(checked) => setInlineRestaurantForExperience({ ...inlineRestaurantForExperience, kidsFriendly: !!checked })} /><Label>Kids friendly</Label></div>
-                            <div className="flex items-center gap-2"><Checkbox checked={inlineRestaurantForExperience.halalChecked} onCheckedChange={(checked) => setInlineRestaurantForExperience({ ...inlineRestaurantForExperience, halalChecked: !!checked })} /><Label>Halal checked</Label></div>
-                            <div className="flex items-center gap-2"><Checkbox checked={inlineRestaurantForExperience.noAlcohol} onCheckedChange={(checked) => setInlineRestaurantForExperience({ ...inlineRestaurantForExperience, noAlcohol: !!checked })} /><Label>No alcohol</Label></div>
-                            <div className="flex items-center gap-2"><Checkbox checked={inlineRestaurantForExperience.noPork} onCheckedChange={(checked) => setInlineRestaurantForExperience({ ...inlineRestaurantForExperience, noPork: !!checked })} /><Label>No pork</Label></div>
-                          </div>
+                          <RestaurantSafetyControls
+                            values={inlineRestaurantForExperience}
+                            compact
+                            onChange={(fieldKey, value) => setInlineRestaurantForExperience((prev) => ({ ...prev, [fieldKey]: value }))}
+                          />
                           <button type="button" className="text-sm text-slate-600 underline" onClick={() => { setShowInlineRestaurantForExperience(false); setInlineRestaurantForExperience(inlineRestaurantFormDefault); }}>
                             Back to existing restaurants
                           </button>
@@ -1954,6 +2041,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
             deleteBranch={deleteBranch}
             setDefaultBranch={setDefaultBranch}
             defaultStatsView={defaultRestaurantStatsView}
+            restaurantAlertLevels={restaurantAlertLevels}
           />
 
           <DishesTab
@@ -2045,8 +2133,10 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
             onLogout={onLogout}
             defaultRestaurantStatsView={defaultRestaurantStatsView}
             setDefaultRestaurantStatsView={setDefaultRestaurantStatsView}
-            defaultRestaurantHalalChecked={defaultRestaurantHalalChecked}
-            setDefaultRestaurantHalalChecked={setDefaultRestaurantHalalChecked}
+            restaurantSafetyDefaults={restaurantSafetyDefaults}
+            setRestaurantSafetyDefault={setRestaurantSafetyDefault}
+            restaurantAlertLevels={restaurantAlertLevels}
+            setRestaurantAlertLevel={setRestaurantAlertLevel}
           />
         </Tabs>
       </div>

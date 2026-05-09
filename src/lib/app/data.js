@@ -5,7 +5,9 @@ import {
   DEFAULT_AREAS,
   DEFAULT_CITIES,
   DEFAULT_CUISINES,
+  RESTAURANT_SAFETY_FIELDS,
   STORAGE_KEY,
+  TRI_STATE_VALUES,
   VALUE_OPTIONS,
 } from "./constants";
 
@@ -15,6 +17,30 @@ function daysAgo(days) {
   const date = new Date();
   date.setDate(date.getDate() - days);
   return date.toISOString().slice(0, 10);
+}
+
+export function normalizeTriState(value, fallback = TRI_STATE_VALUES.UNKNOWN) {
+  if (value === TRI_STATE_VALUES.YES || value === true) return TRI_STATE_VALUES.YES;
+  if (value === TRI_STATE_VALUES.NO || value === false) return TRI_STATE_VALUES.NO;
+  return fallback;
+}
+
+function buildRestaurantSafetyDefaults(source = {}) {
+  return Object.fromEntries(
+    RESTAURANT_SAFETY_FIELDS.map((field) => [
+      field.key,
+      normalizeTriState(source[field.key], TRI_STATE_VALUES.UNKNOWN),
+    ])
+  );
+}
+
+function buildRestaurantAlertSettings(source = {}) {
+  return Object.fromEntries(
+    RESTAURANT_SAFETY_FIELDS.map((field) => [
+      field.key,
+      ["no_only", "never"].includes(source[field.key]) ? source[field.key] : "no_or_unknown",
+    ])
+  );
 }
 
 export function createSampleData() {
@@ -55,7 +81,18 @@ export function createSampleData() {
   return {
     settings: {
       defaultRestaurantStatsView: "cards",
-      defaultRestaurantHalalChecked: true,
+      restaurantSafetyDefaults: {
+        kidsFriendly: TRI_STATE_VALUES.UNKNOWN,
+        halalChecked: TRI_STATE_VALUES.UNKNOWN,
+        noAlcohol: TRI_STATE_VALUES.UNKNOWN,
+        noPork: TRI_STATE_VALUES.UNKNOWN,
+      },
+      restaurantAlertLevels: {
+        kidsFriendly: "no_or_unknown",
+        halalChecked: "no_or_unknown",
+        noAlcohol: "no_or_unknown",
+        noPork: "no_or_unknown",
+      },
     },
     cuisines: DEFAULT_CUISINES,
     areas: DEFAULT_AREAS,
@@ -77,10 +114,10 @@ export function createSampleData() {
         rating: 4,
         notes: "Reliable for breakfast and quick late-night orders.",
         recommendedBy: "Rami",
-        halalChecked: true,
-        kidsFriendly: true,
-        noAlcohol: true,
-        noPork: true,
+        halalChecked: TRI_STATE_VALUES.YES,
+        kidsFriendly: TRI_STATE_VALUES.YES,
+        noAlcohol: TRI_STATE_VALUES.YES,
+        noPork: TRI_STATE_VALUES.YES,
       },
       {
         id: falafelHubId,
@@ -89,10 +126,10 @@ export function createSampleData() {
         rating: 5,
         notes: "Fast service and very consistent wraps.",
         recommendedBy: "Nadine",
-        halalChecked: true,
-        kidsFriendly: false,
-        noAlcohol: true,
-        noPork: true,
+        halalChecked: TRI_STATE_VALUES.YES,
+        kidsFriendly: TRI_STATE_VALUES.NO,
+        noAlcohol: TRI_STATE_VALUES.YES,
+        noPork: TRI_STATE_VALUES.YES,
       },
       {
         id: nonaSliceId,
@@ -101,10 +138,10 @@ export function createSampleData() {
         rating: 4,
         notes: "Good spot for pizza nights and dessert.",
         recommendedBy: "Karim",
-        halalChecked: false,
-        kidsFriendly: true,
-        noAlcohol: false,
-        noPork: false,
+        halalChecked: TRI_STATE_VALUES.NO,
+        kidsFriendly: TRI_STATE_VALUES.YES,
+        noAlcohol: TRI_STATE_VALUES.NO,
+        noPork: TRI_STATE_VALUES.NO,
       },
       {
         id: sushiLoopId,
@@ -113,10 +150,10 @@ export function createSampleData() {
         rating: 4,
         notes: "Clean flavors and good rice texture.",
         recommendedBy: "Lea",
-        halalChecked: false,
-        kidsFriendly: true,
-        noAlcohol: false,
-        noPork: true,
+        halalChecked: TRI_STATE_VALUES.NO,
+        kidsFriendly: TRI_STATE_VALUES.YES,
+        noAlcohol: TRI_STATE_VALUES.NO,
+        noPork: TRI_STATE_VALUES.YES,
       },
       {
         id: burgerYardId,
@@ -125,10 +162,10 @@ export function createSampleData() {
         rating: 4,
         notes: "Strong smash burgers and late-night fries.",
         recommendedBy: "Ziad",
-        halalChecked: true,
-        kidsFriendly: true,
-        noAlcohol: true,
-        noPork: false,
+        halalChecked: TRI_STATE_VALUES.YES,
+        kidsFriendly: TRI_STATE_VALUES.YES,
+        noAlcohol: TRI_STATE_VALUES.YES,
+        noPork: TRI_STATE_VALUES.NO,
       },
       {
         id: sweetLeafId,
@@ -137,10 +174,10 @@ export function createSampleData() {
         rating: 5,
         notes: "Excellent breakfast and dessert stop.",
         recommendedBy: "Tala",
-        halalChecked: true,
-        kidsFriendly: true,
-        noAlcohol: true,
-        noPork: true,
+        halalChecked: TRI_STATE_VALUES.YES,
+        kidsFriendly: TRI_STATE_VALUES.YES,
+        noAlcohol: TRI_STATE_VALUES.YES,
+        noPork: TRI_STATE_VALUES.YES,
       },
     ],
     branches: [
@@ -684,7 +721,12 @@ export function safeParse(value, fallback) {
 
 export function migrateData(parsed) {
   const defaultRestaurantStatsView = parsed.settings?.defaultRestaurantStatsView === "rows" ? "rows" : "cards";
-  const defaultRestaurantHalalChecked = parsed.settings?.defaultRestaurantHalalChecked ?? true;
+  const legacyHalalDefault = parsed.settings?.defaultRestaurantHalalChecked;
+  const restaurantSafetyDefaults = buildRestaurantSafetyDefaults({
+    ...(parsed.settings?.restaurantSafetyDefaults || {}),
+    ...(legacyHalalDefault == null ? {} : { halalChecked: legacyHalalDefault }),
+  });
+  const restaurantAlertLevels = buildRestaurantAlertSettings(parsed.settings?.restaurantAlertLevels || {});
 
   const experiences = (parsed.experiences || []).map(({ restaurantId: _restaurantId, ...e }) => ({
     valueForMoney: typeof e.valueForMoney === "number" ? VALUE_OPTIONS[Math.max(0, Math.min(VALUE_OPTIONS.length - 1, e.valueForMoney - 1))] : e.valueForMoney || "",
@@ -703,10 +745,10 @@ export function migrateData(parsed) {
     rating: r.rating ?? null,
     notes: r.notes || "",
     recommendedBy: r.recommendedBy || "",
-    halalChecked: r.halalChecked ?? true,
-    kidsFriendly: r.kidsFriendly ?? false,
-    noAlcohol: r.noAlcohol ?? false,
-    noPork: r.noPork ?? false,
+    halalChecked: normalizeTriState(r.halalChecked, TRI_STATE_VALUES.UNKNOWN),
+    kidsFriendly: normalizeTriState(r.kidsFriendly, TRI_STATE_VALUES.UNKNOWN),
+    noAlcohol: normalizeTriState(r.noAlcohol, TRI_STATE_VALUES.UNKNOWN),
+    noPork: normalizeTriState(r.noPork, TRI_STATE_VALUES.UNKNOWN),
   }));
 
   const branches = (parsed.branches || []).map((branch) => ({
@@ -754,7 +796,8 @@ export function migrateData(parsed) {
   return {
     settings: {
       defaultRestaurantStatsView,
-      defaultRestaurantHalalChecked,
+      restaurantSafetyDefaults,
+      restaurantAlertLevels,
     },
     cuisines: parsed.cuisines?.length ? parsed.cuisines : DEFAULT_CUISINES,
     areas: parsed.areas?.length ? parsed.areas : DEFAULT_AREAS,

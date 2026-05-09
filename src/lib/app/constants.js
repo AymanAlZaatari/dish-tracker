@@ -95,6 +95,51 @@ export const VALUE_OPTIONS = [
   "Overpriced",
   "Rip-off",
 ];
+export const TRI_STATE_VALUES = {
+  YES: "yes",
+  NO: "no",
+  UNKNOWN: "unknown",
+};
+export const TRI_STATE_OPTIONS = [
+  { value: TRI_STATE_VALUES.YES, label: "Yes" },
+  { value: TRI_STATE_VALUES.NO, label: "No" },
+  { value: TRI_STATE_VALUES.UNKNOWN, label: "N/A" },
+];
+export const RESTAURANT_SAFETY_FIELDS = [
+  {
+    key: "kidsFriendly",
+    label: "Kids friendly",
+    positiveLabel: "Kids friendly",
+    negativeLabel: "Not kids friendly",
+    unknownLabel: "Kids unknown",
+  },
+  {
+    key: "halalChecked",
+    label: "Halal checked",
+    positiveLabel: "Halal checked",
+    negativeLabel: "Not halal checked",
+    unknownLabel: "Halal unknown",
+  },
+  {
+    key: "noAlcohol",
+    label: "No alcohol",
+    positiveLabel: "No alcohol",
+    negativeLabel: "Alcohol",
+    unknownLabel: "Alcohol unknown",
+  },
+  {
+    key: "noPork",
+    label: "No pork",
+    positiveLabel: "No pork",
+    negativeLabel: "Pork",
+    unknownLabel: "Pork unknown",
+  },
+];
+export const RESTAURANT_ALERT_LEVELS = [
+  { value: "no_or_unknown", label: "No or Don't Know" },
+  { value: "no_only", label: "No only" },
+  { value: "never", label: "Never" },
+];
 export const TOP_NAV_STYLES = {
   dashboard: "bg-sky-50 text-sky-900 border-sky-200 data-[state=active]:bg-sky-100 data-[state=active]:text-sky-950 data-[state=active]:ring-2 data-[state=active]:ring-sky-300",
   restaurants: "bg-emerald-50 text-emerald-900 border-emerald-200 data-[state=active]:bg-emerald-100 data-[state=active]:text-emerald-950 data-[state=active]:ring-2 data-[state=active]:ring-emerald-300",

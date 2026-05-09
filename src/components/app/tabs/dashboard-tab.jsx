@@ -11,8 +11,9 @@ import {
   EDIT_BUTTON_STYLE,
   ORDER_TYPE_BADGE_STYLES,
   SECTION_CONTAINER,
+  TRI_STATE_VALUES,
 } from "@/lib/app/constants";
-import { ratingPillClass, valuePillClass } from "@/lib/app/data";
+import { normalizeTriState, ratingPillClass, valuePillClass } from "@/lib/app/data";
 
 import { Stars } from "../shared";
 
@@ -153,8 +154,8 @@ function RestaurantOverviewCard({ restaurant, dishesCount, experiencesCount, avg
                 <span>{cuisine}</span>
               </Badge>
             ))}
-            {!restaurant.noAlcohol ? <Badge className="!border-red-200 !bg-red-100 !text-red-700">Alcohol</Badge> : null}
-            {!restaurant.noPork ? <Badge className="!border-red-200 !bg-red-100 !text-red-700">Pork</Badge> : null}
+            {normalizeTriState(restaurant.noAlcohol) === TRI_STATE_VALUES.NO ? <Badge className="!border-red-200 !bg-red-100 !text-red-700">Alcohol</Badge> : null}
+            {normalizeTriState(restaurant.noPork) === TRI_STATE_VALUES.NO ? <Badge className="!border-red-200 !bg-red-100 !text-red-700">Pork</Badge> : null}
           </div>
         </div>
 

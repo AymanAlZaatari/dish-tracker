@@ -1,3 +1,5 @@
+import { TRI_STATE_VALUES } from "./constants";
+
 export const emptyRestaurantForm = {
   id: null,
   name: "",
@@ -10,10 +12,10 @@ export const emptyRestaurantForm = {
   rating: "",
   notes: "",
   recommendedBy: "",
-  halalChecked: true,
-  kidsFriendly: false,
-  noAlcohol: true,
-  noPork: true,
+  halalChecked: TRI_STATE_VALUES.UNKNOWN,
+  kidsFriendly: TRI_STATE_VALUES.UNKNOWN,
+  noAlcohol: TRI_STATE_VALUES.UNKNOWN,
+  noPork: TRI_STATE_VALUES.UNKNOWN,
 };
 
 export const emptyBranchForm = {
@@ -72,8 +74,8 @@ export const inlineRestaurantFormDefault = {
   rating: "",
   notes: "",
   recommendedBy: "",
-  halalChecked: true,
-  kidsFriendly: false,
-  noAlcohol: true,
-  noPork: true,
+  halalChecked: TRI_STATE_VALUES.UNKNOWN,
+  kidsFriendly: TRI_STATE_VALUES.UNKNOWN,
+  noAlcohol: TRI_STATE_VALUES.UNKNOWN,
+  noPork: TRI_STATE_VALUES.UNKNOWN,
 };

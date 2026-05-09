@@ -15,10 +15,12 @@ import {
   DELETE_BUTTON_STYLE,
   EDIT_BUTTON_STYLE,
   LOG_BUTTON_STYLE,
+  RESTAURANT_SAFETY_FIELDS,
   SECTION_CONTAINER,
+  TRI_STATE_VALUES,
   VIEW_BUTTON_STYLE,
 } from "@/lib/app/constants";
-import { average, ratingPillClass, summarizeTags } from "@/lib/app/data";
+import { average, normalizeTriState, ratingPillClass, summarizeTags } from "@/lib/app/data";
 
 import { Field, ModalActions, ModalHeader, Stars } from "../shared";
 
@@ -56,6 +58,7 @@ export function RestaurantsTab({
   deleteBranch,
   setDefaultBranch,
   defaultStatsView,
+  restaurantAlertLevels,
 }) {
   const [expandAllDishes, setExpandAllDishes] = useState(false);
   const [expandedDishRestaurantIds, setExpandedDishRestaurantIds] = useState([]);
@@ -250,6 +253,17 @@ export function RestaurantsTab({
             const avgDishRating = average(dishes.map((d) => computedDishRating(d.id)));
             const avgDishPrice = average(dishes.map((dish) => dish.price));
             const areDishesExpanded = expandAllDishes || expandedDishRestaurantIds.includes(restaurant.id);
+            const safetyBadges = RESTAURANT_SAFETY_FIELDS.map((field) => {
+              const value = normalizeTriState(restaurant[field.key]);
+              const alertLevel = restaurantAlertLevels?.[field.key] || "no_or_unknown";
+              const isAlert = alertLevel !== "never" && (
+                value === TRI_STATE_VALUES.NO || (alertLevel === "no_or_unknown" && value === TRI_STATE_VALUES.UNKNOWN)
+              );
+              if (value === TRI_STATE_VALUES.YES) return { key: field.key, label: field.positiveLabel, className: "!border-emerald-200 !bg-emerald-50 !text-emerald-700" };
+              if (!isAlert) return null;
+              if (value === TRI_STATE_VALUES.NO) return { key: field.key, label: field.negativeLabel, className: "!border-red-200 !bg-red-100 !text-red-700" };
+              return { key: field.key, label: field.unknownLabel, className: "!border-amber-200 !bg-amber-100 !text-amber-800" };
+            }).filter(Boolean);
             return (
               <Card key={restaurant.id} className="rounded-3xl border-2 border-slate-200 bg-white shadow-sm">
                 <CardHeader className="flex flex-col gap-4 space-y-0 px-4 pt-5 pb-4 sm:px-6 sm:pt-6 sm:flex-row sm:items-start sm:justify-between">
@@ -259,10 +273,7 @@ export function RestaurantsTab({
                       {restaurant.area && <Badge variant="secondary">{restaurant.area}</Badge>}
                       {restaurant.city && <Badge variant="secondary">{restaurant.city}</Badge>}
                       {(restaurant.cuisines || []).map((cuisine) => <Badge key={cuisine} variant="secondary">{cuisine}</Badge>)}
-                      {restaurant.halalChecked && <Badge variant="outline">Halal checked</Badge>}
-                      {restaurant.kidsFriendly && <Badge className="!border-blue-200 !bg-blue-100 !text-blue-700">Kids friendly</Badge>}
-                      {!restaurant.noAlcohol && <Badge className="!border-red-200 !bg-red-100 !text-red-700">Alcohol</Badge>}
-                      {!restaurant.noPork && <Badge className="!border-red-200 !bg-red-100 !text-red-700">Pork</Badge>}
+                      {safetyBadges.map((badge) => <Badge key={badge.key} className={badge.className}>{badge.label}</Badge>)}
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center gap-2 sm:justify-end">

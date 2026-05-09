@@ -10,7 +10,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TabsContent } from "@/components/ui/tabs";
 
-import { SECTION_CONTAINER, TOP_ACTION_BUTTON_STYLES } from "@/lib/app/constants";
+import {
+  RESTAURANT_ALERT_LEVELS,
+  RESTAURANT_SAFETY_FIELDS,
+  SECTION_CONTAINER,
+  TOP_ACTION_BUTTON_STYLES,
+  TRI_STATE_OPTIONS,
+} from "@/lib/app/constants";
 import { tagChipStyle } from "@/lib/app/data";
 
 import { ModalActions, ModalHeader } from "../shared";
@@ -68,8 +74,10 @@ export function SettingsTab(props) {
     onLogout,
     defaultRestaurantStatsView,
     setDefaultRestaurantStatsView,
-    defaultRestaurantHalalChecked,
-    setDefaultRestaurantHalalChecked,
+    restaurantSafetyDefaults,
+    setRestaurantSafetyDefault,
+    restaurantAlertLevels,
+    setRestaurantAlertLevel,
   } = props;
 
   const cuisineRows = data.cuisines.map((cuisine) => {
@@ -118,15 +126,37 @@ export function SettingsTab(props) {
                 </SelectContent>
               </Select>
             </div>
-            <div>Choose whether new restaurant forms default `Halal checked` to checked or unchecked.</div>
-            <div className="max-w-xs">
-              <Select value={defaultRestaurantHalalChecked ? "true" : "false"} onValueChange={setDefaultRestaurantHalalChecked}>
-                <SelectTrigger><SelectValue placeholder="Default halal checked" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="true">Checked</SelectItem>
-                  <SelectItem value="false">Unchecked</SelectItem>
-                </SelectContent>
-              </Select>
+            <div>Choose the default restaurant safety values and which values should show warning tags.</div>
+            <div className="grid gap-3 md:grid-cols-2">
+              {RESTAURANT_SAFETY_FIELDS.map((field) => (
+                <div key={field.key} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                  <div className="mb-2 font-medium text-slate-900">{field.label}</div>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <div className="space-y-1">
+                      <div className="text-xs font-medium uppercase text-slate-500">Default</div>
+                      <Select value={restaurantSafetyDefaults[field.key]} onValueChange={(value) => setRestaurantSafetyDefault(field.key, value)}>
+                        <SelectTrigger><SelectValue placeholder="Default value" /></SelectTrigger>
+                        <SelectContent>
+                          {TRI_STATE_OPTIONS.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>{option.label === "?" ? "Don't Know" : option.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="text-xs font-medium uppercase text-slate-500">Warning tag</div>
+                      <Select value={restaurantAlertLevels[field.key]} onValueChange={(value) => setRestaurantAlertLevel(field.key, value)}>
+                        <SelectTrigger><SelectValue placeholder="Warning tags" /></SelectTrigger>
+                        <SelectContent>
+                          {RESTAURANT_ALERT_LEVELS.map((level) => (
+                            <SelectItem key={level.value} value={level.value}>{level.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
