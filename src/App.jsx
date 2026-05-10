@@ -1694,7 +1694,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                             <Select value={experienceForm.valueForMoney || "__none"} onValueChange={(value) => setExperienceForm({ ...experienceForm, valueForMoney: value === "__none" ? "" : value })}>
                               <SelectTrigger><SelectValue placeholder="Select value" /></SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="__none">No value</SelectItem>
+                                <SelectItem value="__none">No answer</SelectItem>
                                 {VALUE_OPTIONS.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}
                               </SelectContent>
                             </Select>
@@ -1931,7 +1931,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                       <Select value={experienceForm.valueForMoney || "__none"} onValueChange={(value) => setExperienceForm({ ...experienceForm, valueForMoney: value === "__none" ? "" : value })}>
                         <SelectTrigger><SelectValue placeholder="Select value" /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="__none">No value</SelectItem>
+                          <SelectItem value="__none">No answer</SelectItem>
                           {VALUE_OPTIONS.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}
                         </SelectContent>
                       </Select>
