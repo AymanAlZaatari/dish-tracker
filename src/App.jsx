@@ -1544,7 +1544,8 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                                     key={restaurant.id}
                                     type="button"
                                     className="flex w-full items-center justify-between gap-3 border-b px-4 py-3 text-left last:border-b-0 hover:bg-slate-50"
-                                    onClick={() => {
+                                    onPointerDown={(event) => {
+                                      event.preventDefault();
                                       setDishForm((prev) => ({ ...prev, restaurantId: restaurant.id, branchId: "none" }));
                                       setDishRestaurantSearch(restaurant.name);
                                       setDishRestaurantError("");
@@ -1768,7 +1769,8 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                                     key={restaurant.id}
                                     type="button"
                                     className="flex w-full items-center justify-between gap-3 border-b px-4 py-3 text-left last:border-b-0 hover:bg-slate-50"
-                                    onClick={() => {
+                                    onPointerDown={(event) => {
+                                      event.preventDefault();
                                       setExperienceForm((prev) => ({ ...prev, restaurantId: restaurant.id, dishId: "", branchId: "none" }));
                                       setExperienceRestaurantSearch(restaurant.name);
                                       setExperienceDishSearch("");
