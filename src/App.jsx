@@ -98,7 +98,7 @@ function TriStateSegmented({ label, value, onChange, compact = false }) {
   const currentValue = normalizeTriState(value);
 
   return (
-    <div className="flex items-center justify-between gap-3">
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
       <Label className="min-w-0 flex-1 text-sm font-medium leading-tight text-slate-700">{label}</Label>
       <div className="inline-grid shrink-0 grid-cols-3 overflow-hidden rounded-lg border border-slate-200 bg-white text-xs">
         {TRI_STATE_OPTIONS.map((option) => {
@@ -131,7 +131,7 @@ function TriStateSegmented({ label, value, onChange, compact = false }) {
 
 function RestaurantSafetyControls({ values, onChange, compact = false }) {
   return (
-    <div className={compact ? "grid gap-2 sm:grid-cols-2" : "grid gap-2 sm:grid-cols-2 md:grid-cols-4"}>
+    <div className={compact ? "grid gap-2 sm:grid-cols-2" : "grid gap-2 sm:grid-cols-2"}>
       {RESTAURANT_SAFETY_FIELDS.map((field) => (
         <TriStateSegmented
           key={field.key}
