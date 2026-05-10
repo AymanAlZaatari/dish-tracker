@@ -181,17 +181,17 @@ export function SettingsTab(props) {
             {allDishTags.length === 0 ? (
               <div className="text-sm text-slate-500">No dish tags yet.</div>
             ) : (
-              <div className="flex flex-wrap gap-3">
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {allDishTags.map((tag) => {
                   const taggedDishes = data.dishes.filter((dish) => (dish.tags || []).includes(tag));
                   const isExpanded = expandedTag === tag;
 
                   return (
-                    <div key={tag} className={`rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 ${isExpanded ? "min-w-[18rem]" : ""}`}>
+                    <div key={tag} className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
-                          className="flex items-center gap-3 text-left"
+                          className="min-w-0 flex-1 items-center gap-3 text-left sm:flex"
                           onClick={() => setExpandedTag(isExpanded ? null : tag)}
                           aria-expanded={isExpanded}
                         >
@@ -246,15 +246,15 @@ export function SettingsTab(props) {
             {visibleCuisineRows.length === 0 ? (
               <div className="text-sm text-slate-500">No cuisines yet.</div>
             ) : (
-              <div className="flex flex-wrap gap-3">
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {visibleCuisineRows.map(({ cuisine, cuisineRestaurants }) => {
                   const isExpanded = expandedCuisine === cuisine;
                   return (
-                    <div key={cuisine} className={`rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 ${isExpanded ? "min-w-[18rem]" : ""}`}>
+                    <div key={cuisine} className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
-                          className="flex items-center gap-3 text-left"
+                          className="min-w-0 flex-1 items-center gap-3 text-left sm:flex"
                           onClick={() => setExpandedCuisine(isExpanded ? null : cuisine)}
                           aria-expanded={isExpanded}
                         >
@@ -311,15 +311,15 @@ export function SettingsTab(props) {
             {visibleCityRows.length === 0 ? (
               <div className="text-sm text-slate-500">No cities yet.</div>
             ) : (
-              <div className="flex flex-wrap gap-3">
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {visibleCityRows.map(({ city, cityRestaurants }) => {
                   const isExpanded = expandedCity === city;
                   return (
-                    <div key={city} className={`rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 ${isExpanded ? "min-w-[18rem]" : ""}`}>
+                    <div key={city} className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
-                          className="flex items-center gap-3 text-left"
+                          className="min-w-0 flex-1 items-center gap-3 text-left sm:flex"
                           onClick={() => setExpandedCity(isExpanded ? null : city)}
                           aria-expanded={isExpanded}
                         >
@@ -376,15 +376,15 @@ export function SettingsTab(props) {
             {visibleAreaRows.length === 0 ? (
               <div className="text-sm text-slate-500">No areas yet.</div>
             ) : (
-              <div className="flex flex-wrap gap-3">
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {visibleAreaRows.map(({ area, areaRestaurants }) => {
                   const isExpanded = expandedArea === area;
                   return (
-                    <div key={area} className={`rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 ${isExpanded ? "min-w-[18rem]" : ""}`}>
+                    <div key={area} className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
-                          className="flex items-center gap-3 text-left"
+                          className="min-w-0 flex-1 items-center gap-3 text-left sm:flex"
                           onClick={() => setExpandedArea(isExpanded ? null : area)}
                           aria-expanded={isExpanded}
                         >
