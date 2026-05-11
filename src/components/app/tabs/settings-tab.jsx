@@ -21,12 +21,7 @@ import { tagChipStyle } from "@/lib/app/data";
 
 import { ModalActions, ModalHeader } from "../shared";
 
-const SETTINGS_ADD_BUTTON_STYLES = {
-  tag: "!border-amber-300 !bg-amber-100 !text-amber-900 hover:!bg-amber-200",
-  cuisine: "!border-blue-300 !bg-blue-100 !text-blue-900 hover:!bg-blue-200",
-  city: "!border-emerald-300 !bg-emerald-100 !text-emerald-900 hover:!bg-emerald-200",
-  area: "!border-violet-300 !bg-violet-100 !text-violet-900 hover:!bg-violet-200",
-};
+const SETTINGS_ADD_BUTTON_STYLE = "!border-sky-300 !bg-sky-100 !text-sky-900 hover:!bg-sky-200";
 
 export function SettingsTab(props) {
   const importRef = useRef(null);
@@ -174,7 +169,7 @@ export function SettingsTab(props) {
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="font-bold">Dish Tags</CardTitle>
             <Dialog open={tagOpen} onOpenChange={setTagOpen}>
-              <DialogTrigger asChild><Button variant="outline" className={SETTINGS_ADD_BUTTON_STYLES.tag}><Plus className="mr-2 h-4 w-4" /> Add Tag</Button></DialogTrigger>
+              <DialogTrigger asChild><Button variant="outline" className={SETTINGS_ADD_BUTTON_STYLE}><Plus className="mr-2 h-4 w-4" /> Add Tag</Button></DialogTrigger>
               <DialogContent>
                 <ModalHeader title="Add Tag" onClose={() => setTagOpen(false)} />
                 <div className="space-y-4">
@@ -244,7 +239,7 @@ export function SettingsTab(props) {
 
       <div className={SECTION_CONTAINER}>
         <Card className="rounded-3xl border-0 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="font-bold">Cuisines</CardTitle><Dialog open={cuisineOpen} onOpenChange={setCuisineOpen}><DialogTrigger asChild><Button variant="outline" className={SETTINGS_ADD_BUTTON_STYLES.cuisine}><Plus className="mr-2 h-4 w-4" /> Add Cuisine</Button></DialogTrigger><DialogContent><ModalHeader title="Add Cuisine" onClose={() => setCuisineOpen(false)} /><div className="space-y-4"><Input value={newCuisine} onChange={(e) => setNewCuisine(e.target.value)} placeholder="Enter cuisine name" /><ModalActions onCancel={() => setCuisineOpen(false)} onSave={addCuisine} saveLabel="Save" /></div></DialogContent></Dialog></CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="font-bold">Cuisines</CardTitle><Dialog open={cuisineOpen} onOpenChange={setCuisineOpen}><DialogTrigger asChild><Button variant="outline" className={SETTINGS_ADD_BUTTON_STYLE}><Plus className="mr-2 h-4 w-4" /> Add Cuisine</Button></DialogTrigger><DialogContent><ModalHeader title="Add Cuisine" onClose={() => setCuisineOpen(false)} /><div className="space-y-4"><Input value={newCuisine} onChange={(e) => setNewCuisine(e.target.value)} placeholder="Enter cuisine name" /><ModalActions onCancel={() => setCuisineOpen(false)} onSave={addCuisine} saveLabel="Save" /></div></DialogContent></Dialog></CardHeader>
           <CardContent>
             <div className="mb-4 flex items-center gap-3">
               <input id="show-empty-cuisines" type="checkbox" checked={showEmptyCuisines} onChange={(e) => setShowEmptyCuisines(e.target.checked)} />
@@ -309,7 +304,7 @@ export function SettingsTab(props) {
 
       <div className={SECTION_CONTAINER}>
         <Card className="rounded-3xl border-0 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="font-bold">Cities</CardTitle><Dialog open={cityOpen} onOpenChange={setCityOpen}><DialogTrigger asChild><Button variant="outline" className={SETTINGS_ADD_BUTTON_STYLES.city}><Plus className="mr-2 h-4 w-4" /> Add City</Button></DialogTrigger><DialogContent><ModalHeader title="Add City" onClose={() => setCityOpen(false)} /><div className="space-y-4"><Input value={newCity} onChange={(e) => setNewCity(e.target.value)} placeholder="Enter city name" /><ModalActions onCancel={() => setCityOpen(false)} onSave={addCity} saveLabel="Save" /></div></DialogContent></Dialog></CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="font-bold">Cities</CardTitle><Dialog open={cityOpen} onOpenChange={setCityOpen}><DialogTrigger asChild><Button variant="outline" className={SETTINGS_ADD_BUTTON_STYLE}><Plus className="mr-2 h-4 w-4" /> Add City</Button></DialogTrigger><DialogContent><ModalHeader title="Add City" onClose={() => setCityOpen(false)} /><div className="space-y-4"><Input value={newCity} onChange={(e) => setNewCity(e.target.value)} placeholder="Enter city name" /><ModalActions onCancel={() => setCityOpen(false)} onSave={addCity} saveLabel="Save" /></div></DialogContent></Dialog></CardHeader>
           <CardContent>
             <div className="mb-4 flex items-center gap-3">
               <input id="show-empty-cities" type="checkbox" checked={showEmptyCities} onChange={(e) => setShowEmptyCities(e.target.checked)} />
@@ -374,7 +369,7 @@ export function SettingsTab(props) {
 
       <div className={SECTION_CONTAINER}>
         <Card className="rounded-3xl border-0 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="font-bold">Areas</CardTitle><Dialog open={areaOpen} onOpenChange={setAreaOpen}><DialogTrigger asChild><Button variant="outline" className={SETTINGS_ADD_BUTTON_STYLES.area}><Plus className="mr-2 h-4 w-4" /> Add Area</Button></DialogTrigger><DialogContent><ModalHeader title="Add Area" onClose={() => setAreaOpen(false)} /><div className="space-y-4"><Input value={newArea} onChange={(e) => setNewArea(e.target.value)} placeholder="Enter area / city" /><ModalActions onCancel={() => setAreaOpen(false)} onSave={addArea} saveLabel="Save" /></div></DialogContent></Dialog></CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="font-bold">Areas</CardTitle><Dialog open={areaOpen} onOpenChange={setAreaOpen}><DialogTrigger asChild><Button variant="outline" className={SETTINGS_ADD_BUTTON_STYLE}><Plus className="mr-2 h-4 w-4" /> Add Area</Button></DialogTrigger><DialogContent><ModalHeader title="Add Area" onClose={() => setAreaOpen(false)} /><div className="space-y-4"><Input value={newArea} onChange={(e) => setNewArea(e.target.value)} placeholder="Enter area / city" /><ModalActions onCancel={() => setAreaOpen(false)} onSave={addArea} saveLabel="Save" /></div></DialogContent></Dialog></CardHeader>
           <CardContent>
             <div className="mb-4 flex items-center gap-3">
               <input id="show-empty-areas" type="checkbox" checked={showEmptyAreas} onChange={(e) => setShowEmptyAreas(e.target.checked)} />
