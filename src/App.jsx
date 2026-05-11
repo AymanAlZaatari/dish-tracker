@@ -1623,7 +1623,10 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                                 key={dish.id}
                                 type="button"
                                 className="flex w-full items-start justify-between gap-3 border-b px-4 py-3 text-left last:border-b-0 hover:bg-slate-50"
-                                onClick={() => selectDishNameSuggestion(dish)}
+                                onPointerDown={(event) => {
+                                  event.preventDefault();
+                                  selectDishNameSuggestion(dish);
+                                }}
                               >
                                 <div>
                                   <div className="flex flex-wrap items-center gap-2">
