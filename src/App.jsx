@@ -104,18 +104,18 @@ function TriStateSegmented({ label, value, onChange, compact = false }) {
         {TRI_STATE_OPTIONS.map((option) => {
           const isActive = currentValue === option.value;
           const selectedClass = option.value === TRI_STATE_VALUES.YES
-            ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100 focus-visible:bg-emerald-100"
+            ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200 focus-visible:bg-emerald-200"
             : option.value === TRI_STATE_VALUES.NO
-              ? "bg-red-100 text-red-800 hover:bg-red-100 focus-visible:bg-red-100"
-              : "bg-yellow-100 text-yellow-800 hover:bg-yellow-100 focus-visible:bg-yellow-100";
+              ? "bg-red-100 text-red-800 hover:bg-red-200 focus-visible:bg-red-200"
+              : "bg-yellow-100 text-yellow-800 hover:bg-yellow-200 focus-visible:bg-yellow-200";
           return (
             <button
               key={option.value}
               type="button"
               className={[
-                "h-8 min-w-9 px-2 font-medium text-slate-500 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300",
+                "h-8 min-w-9 px-2 font-medium text-slate-500 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300",
                 option.value !== TRI_STATE_VALUES.YES ? "border-l border-slate-200" : "",
-                isActive ? selectedClass : "",
+                isActive ? selectedClass : "hover:bg-slate-50",
               ].filter(Boolean).join(" ")}
               onClick={() => onChange(option.value)}
               aria-pressed={isActive}
