@@ -85,7 +85,9 @@ export function DishesTab({
               <div className="rounded-2xl border border-slate-200 bg-white p-4">
                 <div className="text-xl font-bold tracking-tight text-slate-900">{activeDishComparison.label}</div>
                 <div className="mt-1 text-sm text-slate-600">
-                  {activeDishComparisonRows.length} restaurant{activeDishComparisonRows.length === 1 ? "" : "s"} tracked for this dish.
+                  {activeDishComparison.matchCount > 1
+                    ? `${activeDishComparison.matchCount} dish matches across ${activeDishComparisonRows.length} restaurant entr${activeDishComparisonRows.length === 1 ? "y" : "ies"}.`
+                    : `${activeDishComparisonRows.length} restaurant${activeDishComparisonRows.length === 1 ? "" : "s"} tracked for this dish.`}
                 </div>
               </div>
 
@@ -93,6 +95,7 @@ export function DishesTab({
                 <table className="min-w-full text-sm">
                   <thead className="bg-slate-50 text-left text-slate-600">
                     <tr>
+                      <th className="px-4 py-3 font-medium">Dish</th>
                       <th className="px-4 py-3 font-medium">Restaurant</th>
                       <th className="px-4 py-3 font-medium">Average</th>
                       <th className="px-4 py-3 font-medium">Latest</th>
@@ -105,6 +108,16 @@ export function DishesTab({
                   <tbody>
                     {activeDishComparisonRows.map(({ dish, restaurant, branch, experiences, latestExperience, avgRating, bestRating }) => (
                       <tr key={dish.id} className="border-t align-top">
+                        <td className="px-4 py-3">
+                          <div className="font-medium text-slate-900">{dish.name}</div>
+                          {dish.tags?.length ? (
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {dish.tags.slice(0, 3).map((tag) => (
+                                <Badge key={tag} variant="outline" className="text-[0.65rem]" style={tagChipStyle(data.tagColors?.[tag])}>{tag}</Badge>
+                              ))}
+                            </div>
+                          ) : null}
+                        </td>
                         <td className="px-4 py-3">
                           <div className="font-medium text-slate-900">{restaurant?.name || "Unknown restaurant"}</div>
                           <div className="mt-1 text-xs text-slate-500">

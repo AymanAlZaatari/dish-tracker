@@ -325,9 +325,19 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     const query = normalizeDishName(dishReportSearch || "");
     if (!query) return null;
 
-    return dishComparisonGroups.find((group) => group.key === query)
-      || dishComparisonGroups.find((group) => group.key.includes(query))
-      || null;
+    const exactMatch = dishComparisonGroups.find((group) => group.key === query);
+    if (exactMatch) return exactMatch;
+
+    const partialMatches = dishComparisonGroups.filter((group) => group.key.includes(query));
+    if (partialMatches.length === 0) return null;
+    if (partialMatches.length === 1) return partialMatches[0];
+
+    return {
+      key: `search:${query}`,
+      label: `Matches for "${dishReportSearch.trim()}"`,
+      items: partialMatches.flatMap((group) => group.items),
+      matchCount: partialMatches.length,
+    };
   }, [dishComparisonGroups, dishReportSearch]);
 
   const activeDishComparisonRows = useMemo(() => {
