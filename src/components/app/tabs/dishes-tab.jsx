@@ -206,27 +206,28 @@ export function DishesTab({
                   <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0 flex-1">
                       <CardTitle className="break-words text-2xl font-bold tracking-tight">{dish.name}</CardTitle>
-                      <div className="mt-1 flex min-w-0 items-center justify-between gap-2 text-sm text-slate-500">
+                      <div className="mt-1 flex min-w-0 items-center text-sm text-slate-500">
                         <span className="min-w-0 truncate">{[restaurant?.name || "Unknown restaurant", restaurant?.city].filter(Boolean).join(" • ")}</span>
-                        <span className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[0.75rem] font-semibold ${ratingPillClass(avgRating)}`}>
-                          {avgRating ? <><span>{avgRating.toFixed(1)}</span><Stars value={avgRating} size="sm" /></> : <span>—</span>}
-                        </span>
                       </div>
                     </div>
-                    <div className="flex shrink-0 flex-wrap items-center gap-2">
-                      <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${EDIT_BUTTON_STYLE}`} onClick={() => editDish(dish)} aria-label={`Edit ${dish.name}`}>
-                        <Pencil className="h-4 w-4 sm:mr-2" />
-                        <span className="hidden sm:inline">Edit</span>
-                      </Button>
-                      <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${DELETE_BUTTON_STYLE}`} onClick={() => deleteDish(dish.id)} aria-label={`Delete ${dish.name}`}>
-                        <Trash2 className="h-4 w-4 sm:mr-2" />
-                        <span className="hidden sm:inline">Delete</span>
-                      </Button>
+                    <div className="flex shrink-0 flex-col items-end gap-2">
+                      <div className="flex flex-wrap items-center justify-end gap-2">
+                        <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${EDIT_BUTTON_STYLE}`} onClick={() => editDish(dish)} aria-label={`Edit ${dish.name}`}>
+                          <Pencil className="h-4 w-4 sm:mr-2" />
+                          <span className="hidden sm:inline">Edit</span>
+                        </Button>
+                        <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${DELETE_BUTTON_STYLE}`} onClick={() => deleteDish(dish.id)} aria-label={`Delete ${dish.name}`}>
+                          <Trash2 className="h-4 w-4 sm:mr-2" />
+                          <span className="hidden sm:inline">Delete</span>
+                        </Button>
+                      </div>
+                      <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[0.75rem] font-semibold ${ratingPillClass(avgRating)}`}>
+                        {avgRating ? <><span>{avgRating.toFixed(1)}</span><Stars value={avgRating} size="sm" /></> : <span>—</span>}
+                      </span>
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {dish.isWishlist ? <Badge className="!border-amber-200 !bg-amber-100 !text-amber-800">Wishlist</Badge> : <Badge className="!border-emerald-200 !bg-emerald-100 !text-emerald-800">Tried</Badge>}
-                    {restaurant?.area && <Badge variant="secondary">{restaurant.area}</Badge>}
                     {(restaurant?.cuisines || []).map((cuisine) => <Badge key={cuisine} variant="secondary">{cuisine}</Badge>)}
                     {branch && <Badge variant="secondary">Branch: {branch.name}</Badge>}
                     {dish.portionSize && dish.portionSize !== "Adult" && <Badge variant="outline">{dish.portionSize}</Badge>}
