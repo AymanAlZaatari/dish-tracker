@@ -206,11 +206,10 @@ export function DishesTab({
                   <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
                       <CardTitle className="break-words text-2xl font-bold tracking-tight">{dish.name}</CardTitle>
-                      <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-                        <span>{restaurant?.name || "Unknown restaurant"}</span>
-                        <span className={`inline-flex max-w-full flex-wrap items-center gap-2 rounded-full border px-3 py-1 text-[0.8rem] font-semibold ${ratingPillClass(avgRating)}`}>
-                          <span>Rating:</span>
-                          {avgRating ? <><span>({avgRating.toFixed(1)})</span><Stars value={avgRating} /></> : <span>—</span>}
+                      <div className="mt-1 flex min-w-0 items-center justify-between gap-2 text-sm text-slate-500">
+                        <span className="min-w-0 truncate">{restaurant?.name || "Unknown restaurant"}</span>
+                        <span className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[0.75rem] font-semibold ${ratingPillClass(avgRating)}`}>
+                          {avgRating ? <><span>{avgRating.toFixed(1)}</span><Stars value={avgRating} size="sm" /></> : <span>—</span>}
                         </span>
                       </div>
                     </div>
