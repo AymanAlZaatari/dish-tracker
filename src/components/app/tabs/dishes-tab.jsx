@@ -95,7 +95,7 @@ export function DishesTab({
                 <table className="min-w-full text-sm">
                   <thead className="bg-slate-50 text-left text-slate-600">
                     <tr>
-                      <th className="px-4 py-3 font-medium">Dish</th>
+                      <th className="sticky left-0 z-20 min-w-[12rem] border-r border-slate-200 bg-slate-50 px-4 py-3 font-medium shadow-[6px_0_10px_-10px_rgba(15,23,42,0.45)]">Dish</th>
                       <th className="px-4 py-3 font-medium">Restaurant</th>
                       <th className="px-4 py-3 font-medium">Average</th>
                       <th className="px-4 py-3 font-medium">Latest</th>
@@ -108,7 +108,7 @@ export function DishesTab({
                   <tbody>
                     {activeDishComparisonRows.map(({ dish, restaurant, branch, experiences, latestExperience, avgRating, bestRating }) => (
                       <tr key={dish.id} className="border-t align-top">
-                        <td className="px-4 py-3">
+                        <td className="sticky left-0 z-10 min-w-[12rem] border-r border-slate-200 bg-white px-4 py-3 shadow-[6px_0_10px_-10px_rgba(15,23,42,0.45)]">
                           <div className="font-medium text-slate-900">{dish.name}</div>
                           {dish.tags?.length ? (
                             <div className="mt-1 flex flex-wrap gap-1">
