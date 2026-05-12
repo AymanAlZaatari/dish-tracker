@@ -248,6 +248,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   const restaurantNameInputRef = useRef(null);
   const dishRestaurantInputRef = useRef(null);
   const dishNameInputRef = useRef(null);
+  const backGuardActiveRef = useRef(false);
 
   const defaultBranchByRestaurantId = useMemo(() => {
     const entries = data.restaurants.map((restaurant) => {
@@ -278,6 +279,55 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   const defaultRestaurantStatsView = data.settings?.defaultRestaurantStatsView === "rows" ? "rows" : "cards";
   const restaurantFormBranchCount = restaurantForm.id ? (branchCountByRestaurantId[restaurantForm.id] || 0) : 0;
   const canEditRestaurantAddressFields = !restaurantForm.id || restaurantFormBranchCount <= 1;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const hasOpenAppDialog = restaurantOpen || branchOpen || dishOpen || experienceOpen || cuisineOpen || areaOpen || cityOpen || tagOpen;
+    const shouldGuardBack = hasOpenAppDialog || tab !== "dashboard";
+
+    if (shouldGuardBack && !backGuardActiveRef.current) {
+      window.history.pushState({ dishTrackerBackGuard: true }, "", window.location.href);
+      backGuardActiveRef.current = true;
+    }
+    if (!shouldGuardBack) {
+      backGuardActiveRef.current = false;
+    }
+
+    const handleBack = () => {
+      backGuardActiveRef.current = false;
+      let handled = false;
+
+      if (restaurantOpen) { setRestaurantOpen(false); resetRestaurantForm(); handled = true; }
+      else if (branchOpen) { setBranchOpen(false); resetBranchForm(); handled = true; }
+      else if (dishOpen) { setDishOpen(false); resetDishForm(); handled = true; }
+      else if (experienceOpen) { setExperienceOpen(false); resetExperienceForm(); handled = true; }
+      else if (tagOpen) { setTagOpen(false); handled = true; }
+      else if (cuisineOpen) { setCuisineOpen(false); handled = true; }
+      else if (cityOpen) { setCityOpen(false); handled = true; }
+      else if (areaOpen) { setAreaOpen(false); handled = true; }
+      else {
+        const detail = { handled: false };
+        window.dispatchEvent(new CustomEvent("dish-tracker-close-popup", { detail }));
+        handled = detail.handled;
+      }
+
+      if (!handled && tab !== "dashboard") {
+        setTab("dashboard");
+        handled = true;
+      }
+
+      if (handled && tab !== "dashboard") {
+        window.setTimeout(() => {
+          window.history.pushState({ dishTrackerBackGuard: true }, "", window.location.href);
+          backGuardActiveRef.current = true;
+        }, 0);
+      }
+    };
+
+    window.addEventListener("popstate", handleBack);
+    return () => window.removeEventListener("popstate", handleBack);
+  }, [areaOpen, branchOpen, cityOpen, cuisineOpen, dishOpen, experienceOpen, restaurantOpen, tab, tagOpen]);
 
   const allDishTags = useMemo(() => [...new Set(data.dishes.flatMap((d) => d.tags || []))].sort(), [data.dishes]);
   const allRecommendationTags = useMemo(() => [...new Set(data.dishes.flatMap((d) => d.recommendations || []))].sort(), [data.dishes]);

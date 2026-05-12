@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CalendarDays, Camera, DollarSign, Filter, Heart, MapPin, NotebookText, Pencil, Sparkles, Star, Store, Trash2, UtensilsCrossed } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -41,6 +41,16 @@ export function DashboardTab({
   restaurantMusicAlertLevel,
 }) {
   const [dishListRestaurant, setDishListRestaurant] = useState(null);
+
+  useEffect(() => {
+    const closePopup = (event) => {
+      if (!dishListRestaurant) return;
+      setDishListRestaurant(null);
+      event.detail.handled = true;
+    };
+    window.addEventListener("dish-tracker-close-popup", closePopup);
+    return () => window.removeEventListener("dish-tracker-close-popup", closePopup);
+  }, [dishListRestaurant]);
 
   return (
     <TabsContent value="dashboard" className="space-y-6">

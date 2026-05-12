@@ -74,6 +74,16 @@ export function RestaurantsTab({
     setBranchManagerRestaurantId((currentId) => (currentId && visibleRestaurantIds.has(currentId) ? currentId : null));
   }, [filteredRestaurants]);
 
+  useEffect(() => {
+    const closePopup = (event) => {
+      if (!branchManagerRestaurantId) return;
+      setBranchManagerRestaurantId(null);
+      event.detail.handled = true;
+    };
+    window.addEventListener("dish-tracker-close-popup", closePopup);
+    return () => window.removeEventListener("dish-tracker-close-popup", closePopup);
+  }, [branchManagerRestaurantId]);
+
   const toggleRestaurantDishes = (restaurantId) => {
     if (expandAllDishes) {
       setExpandAllDishes(false);

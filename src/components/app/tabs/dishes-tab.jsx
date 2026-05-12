@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Camera, CalendarDays, DollarSign, NotebookText, Pencil, Search, Star, Trash2 } from "lucide-react";
 
@@ -58,6 +58,16 @@ export function DishesTab({
   const selectedDishBranchById = Object.fromEntries(
     data.branches.filter((branch) => branch.restaurantId === experienceListDish?.restaurantId).map((branch) => [branch.id, branch])
   );
+
+  useEffect(() => {
+    const closePopup = (event) => {
+      if (!experienceListDish) return;
+      setExperienceListDish(null);
+      event.detail.handled = true;
+    };
+    window.addEventListener("dish-tracker-close-popup", closePopup);
+    return () => window.removeEventListener("dish-tracker-close-popup", closePopup);
+  }, [experienceListDish]);
 
   return (
     <TabsContent value="dishes" className="space-y-6">
