@@ -132,10 +132,10 @@ export function SettingsTab(props) {
             <div className="grid gap-3 md:grid-cols-2">
               {RESTAURANT_SAFETY_FIELDS.map((field) => (
                 <div key={field.key} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                  <div className="mb-2 font-medium text-slate-900">{field.label}</div>
+                  <div className="mb-2 font-bold text-slate-900">{field.label}</div>
                   <div className="grid gap-2 sm:grid-cols-2">
                     <div className="space-y-1">
-                      <div className="text-xs font-medium uppercase text-slate-500">Default</div>
+                      <div className="text-xs font-semibold uppercase text-slate-700">Default</div>
                       <Select value={restaurantSafetyDefaults[field.key]} onValueChange={(value) => setRestaurantSafetyDefault(field.key, value)}>
                         <SelectTrigger><SelectValue placeholder="Default value" /></SelectTrigger>
                         <SelectContent>
@@ -146,7 +146,7 @@ export function SettingsTab(props) {
                       </Select>
                     </div>
                     <div className="space-y-1">
-                      <div className="text-xs font-medium uppercase text-slate-500">Warning tag</div>
+                      <div className="text-xs font-semibold uppercase text-slate-700">Warning tag</div>
                       <Select value={restaurantAlertLevels[field.key]} onValueChange={(value) => setRestaurantAlertLevel(field.key, value)}>
                         <SelectTrigger><SelectValue placeholder="Warning tags" /></SelectTrigger>
                         <SelectContent>
