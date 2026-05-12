@@ -22,6 +22,8 @@ import { tagChipStyle } from "@/lib/app/data";
 import { ModalActions, ModalHeader } from "../shared";
 
 const SETTINGS_ADD_BUTTON_STYLE = "!border-sky-300 !bg-sky-100 !text-sky-900 hover:!bg-sky-200";
+const SETTINGS_ICON_EDIT_STYLE = "inline-flex items-center justify-center rounded-full border border-blue-300 bg-blue-100 p-2 text-blue-800 hover:bg-blue-200 hover:text-blue-900";
+const SETTINGS_ICON_DELETE_STYLE = "inline-flex items-center justify-center rounded-full border border-red-300 bg-red-100 p-2 text-red-800 hover:bg-red-200 hover:text-red-900";
 
 export function SettingsTab(props) {
   const importRef = useRef(null);
@@ -204,7 +206,7 @@ export function SettingsTab(props) {
                         <div className="ml-auto flex items-center gap-2">
                           <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                            className={SETTINGS_ICON_EDIT_STYLE}
                             onClick={() => renameTag(tag)}
                             aria-label={`Rename ${tag}`}
                           >
@@ -267,7 +269,7 @@ export function SettingsTab(props) {
                         <div className="ml-auto flex items-center gap-2">
                           <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                            className={SETTINGS_ICON_EDIT_STYLE}
                             onClick={() => renameCuisine(cuisine)}
                             aria-label={`Rename ${cuisine}`}
                           >
@@ -275,7 +277,7 @@ export function SettingsTab(props) {
                           </button>
                           <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-500 hover:bg-red-50 hover:text-red-700"
+                            className={SETTINGS_ICON_DELETE_STYLE}
                             onClick={() => deleteCuisine(cuisine)}
                             aria-label={`Delete ${cuisine}`}
                           >
@@ -332,7 +334,7 @@ export function SettingsTab(props) {
                         <div className="ml-auto flex items-center gap-2">
                           <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                            className={SETTINGS_ICON_EDIT_STYLE}
                             onClick={() => renameCity(city)}
                             aria-label={`Rename ${city}`}
                           >
@@ -340,7 +342,7 @@ export function SettingsTab(props) {
                           </button>
                           <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-500 hover:bg-red-50 hover:text-red-700"
+                            className={SETTINGS_ICON_DELETE_STYLE}
                             onClick={() => deleteCity(city)}
                             aria-label={`Delete ${city}`}
                           >
@@ -397,7 +399,7 @@ export function SettingsTab(props) {
                         <div className="ml-auto flex items-center gap-2">
                           <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                            className={SETTINGS_ICON_EDIT_STYLE}
                             onClick={() => renameArea(area)}
                             aria-label={`Rename ${area}`}
                           >
@@ -405,7 +407,7 @@ export function SettingsTab(props) {
                           </button>
                           <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-500 hover:bg-red-50 hover:text-red-700"
+                            className={SETTINGS_ICON_DELETE_STYLE}
                             onClick={() => deleteArea(area)}
                             aria-label={`Delete ${area}`}
                           >
