@@ -5,6 +5,7 @@ import {
   DEFAULT_AREAS,
   DEFAULT_CITIES,
   DEFAULT_CUISINES,
+  MUSIC_LEVEL_VALUES,
   RESTAURANT_SAFETY_FIELDS,
   STORAGE_KEY,
   TRI_STATE_VALUES,
@@ -25,6 +26,11 @@ export function normalizeTriState(value, fallback = TRI_STATE_VALUES.UNKNOWN) {
   return fallback;
 }
 
+export function normalizeMusicLevel(value, fallback = MUSIC_LEVEL_VALUES.UNKNOWN) {
+  if (value === MUSIC_LEVEL_VALUES.LOW || value === MUSIC_LEVEL_VALUES.HIGH) return value;
+  return fallback;
+}
+
 function buildRestaurantSafetyDefaults(source = {}) {
   return Object.fromEntries(
     RESTAURANT_SAFETY_FIELDS.map((field) => [
@@ -41,6 +47,10 @@ function buildRestaurantAlertSettings(source = {}) {
       ["no_only", "never"].includes(source[field.key]) ? source[field.key] : "no_or_unknown",
     ])
   );
+}
+
+function normalizeMusicAlertLevel(value) {
+  return ["high_only", "never"].includes(value) ? value : "high_or_unknown";
 }
 
 export function createSampleData() {
@@ -113,13 +123,17 @@ export function createSampleData() {
         halalChecked: TRI_STATE_VALUES.UNKNOWN,
         noAlcohol: TRI_STATE_VALUES.UNKNOWN,
         noPork: TRI_STATE_VALUES.UNKNOWN,
+        dedicatedSmokingArea: TRI_STATE_VALUES.UNKNOWN,
       },
       restaurantAlertLevels: {
         kidsFriendly: "no_or_unknown",
         halalChecked: "no_or_unknown",
         noAlcohol: "no_or_unknown",
         noPork: "no_or_unknown",
+        dedicatedSmokingArea: "no_or_unknown",
       },
+      restaurantMusicDefault: MUSIC_LEVEL_VALUES.UNKNOWN,
+      restaurantMusicAlertLevel: "high_or_unknown",
     },
     cuisines: DEFAULT_CUISINES,
     areas: DEFAULT_AREAS,
@@ -145,6 +159,8 @@ export function createSampleData() {
         kidsFriendly: TRI_STATE_VALUES.YES,
         noAlcohol: TRI_STATE_VALUES.YES,
         noPork: TRI_STATE_VALUES.YES,
+        dedicatedSmokingArea: TRI_STATE_VALUES.UNKNOWN,
+        musicLevel: MUSIC_LEVEL_VALUES.UNKNOWN,
       },
       {
         id: falafelHubId,
@@ -157,6 +173,8 @@ export function createSampleData() {
         kidsFriendly: TRI_STATE_VALUES.NO,
         noAlcohol: TRI_STATE_VALUES.YES,
         noPork: TRI_STATE_VALUES.YES,
+        dedicatedSmokingArea: TRI_STATE_VALUES.UNKNOWN,
+        musicLevel: MUSIC_LEVEL_VALUES.UNKNOWN,
       },
       {
         id: nonaSliceId,
@@ -169,6 +187,8 @@ export function createSampleData() {
         kidsFriendly: TRI_STATE_VALUES.YES,
         noAlcohol: TRI_STATE_VALUES.NO,
         noPork: TRI_STATE_VALUES.NO,
+        dedicatedSmokingArea: TRI_STATE_VALUES.UNKNOWN,
+        musicLevel: MUSIC_LEVEL_VALUES.UNKNOWN,
       },
       {
         id: sushiLoopId,
@@ -181,6 +201,8 @@ export function createSampleData() {
         kidsFriendly: TRI_STATE_VALUES.YES,
         noAlcohol: TRI_STATE_VALUES.NO,
         noPork: TRI_STATE_VALUES.YES,
+        dedicatedSmokingArea: TRI_STATE_VALUES.UNKNOWN,
+        musicLevel: MUSIC_LEVEL_VALUES.UNKNOWN,
       },
       {
         id: burgerYardId,
@@ -193,6 +215,8 @@ export function createSampleData() {
         kidsFriendly: TRI_STATE_VALUES.YES,
         noAlcohol: TRI_STATE_VALUES.YES,
         noPork: TRI_STATE_VALUES.NO,
+        dedicatedSmokingArea: TRI_STATE_VALUES.UNKNOWN,
+        musicLevel: MUSIC_LEVEL_VALUES.UNKNOWN,
       },
       {
         id: sweetLeafId,
@@ -205,6 +229,8 @@ export function createSampleData() {
         kidsFriendly: TRI_STATE_VALUES.YES,
         noAlcohol: TRI_STATE_VALUES.YES,
         noPork: TRI_STATE_VALUES.YES,
+        dedicatedSmokingArea: TRI_STATE_VALUES.UNKNOWN,
+        musicLevel: MUSIC_LEVEL_VALUES.UNKNOWN,
       },
       {
         id: ramenStationId,
@@ -217,6 +243,8 @@ export function createSampleData() {
         kidsFriendly: TRI_STATE_VALUES.YES,
         noAlcohol: TRI_STATE_VALUES.NO,
         noPork: TRI_STATE_VALUES.NO,
+        dedicatedSmokingArea: TRI_STATE_VALUES.UNKNOWN,
+        musicLevel: MUSIC_LEVEL_VALUES.UNKNOWN,
       },
       {
         id: tacoLaneId,
@@ -229,6 +257,8 @@ export function createSampleData() {
         kidsFriendly: TRI_STATE_VALUES.YES,
         noAlcohol: TRI_STATE_VALUES.NO,
         noPork: TRI_STATE_VALUES.UNKNOWN,
+        dedicatedSmokingArea: TRI_STATE_VALUES.UNKNOWN,
+        musicLevel: MUSIC_LEVEL_VALUES.UNKNOWN,
       },
     ],
     branches: [
@@ -1393,6 +1423,8 @@ export function migrateData(parsed) {
     ...(legacyHalalDefault == null ? {} : { halalChecked: legacyHalalDefault }),
   });
   const restaurantAlertLevels = buildRestaurantAlertSettings(parsed.settings?.restaurantAlertLevels || {});
+  const restaurantMusicDefault = normalizeMusicLevel(parsed.settings?.restaurantMusicDefault, MUSIC_LEVEL_VALUES.UNKNOWN);
+  const restaurantMusicAlertLevel = normalizeMusicAlertLevel(parsed.settings?.restaurantMusicAlertLevel);
 
   const experiences = (parsed.experiences || []).map(({ restaurantId: _restaurantId, ...e }) => ({
     valueForMoney: typeof e.valueForMoney === "number" ? VALUE_OPTIONS[Math.max(0, Math.min(VALUE_OPTIONS.length - 1, e.valueForMoney - 1))] : e.valueForMoney || "",
@@ -1415,6 +1447,8 @@ export function migrateData(parsed) {
     kidsFriendly: normalizeTriState(r.kidsFriendly, TRI_STATE_VALUES.UNKNOWN),
     noAlcohol: normalizeTriState(r.noAlcohol, TRI_STATE_VALUES.UNKNOWN),
     noPork: normalizeTriState(r.noPork, TRI_STATE_VALUES.UNKNOWN),
+    dedicatedSmokingArea: normalizeTriState(r.dedicatedSmokingArea, TRI_STATE_VALUES.UNKNOWN),
+    musicLevel: normalizeMusicLevel(r.musicLevel, MUSIC_LEVEL_VALUES.UNKNOWN),
   }));
 
   const branches = (parsed.branches || []).map((branch) => ({
@@ -1464,6 +1498,8 @@ export function migrateData(parsed) {
       defaultRestaurantStatsView,
       restaurantSafetyDefaults,
       restaurantAlertLevels,
+      restaurantMusicDefault,
+      restaurantMusicAlertLevel,
     },
     cuisines: parsed.cuisines?.length ? parsed.cuisines : DEFAULT_CUISINES,
     areas: parsed.areas?.length ? parsed.areas : DEFAULT_AREAS,

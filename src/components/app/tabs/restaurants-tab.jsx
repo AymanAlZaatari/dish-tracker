@@ -15,12 +15,13 @@ import {
   DELETE_BUTTON_STYLE,
   EDIT_BUTTON_STYLE,
   LOG_BUTTON_STYLE,
+  MUSIC_LEVEL_VALUES,
   RESTAURANT_SAFETY_FIELDS,
   SECTION_CONTAINER,
   TRI_STATE_VALUES,
   VIEW_BUTTON_STYLE,
 } from "@/lib/app/constants";
-import { average, normalizeTriState, ratingPillClass, summarizeTags } from "@/lib/app/data";
+import { average, normalizeMusicLevel, normalizeTriState, ratingPillClass, summarizeTags } from "@/lib/app/data";
 
 import { Field, ModalActions, ModalHeader, Stars } from "../shared";
 
@@ -59,6 +60,7 @@ export function RestaurantsTab({
   setDefaultBranch,
   defaultStatsView,
   restaurantAlertLevels,
+  restaurantMusicAlertLevel,
 }) {
   const [expandAllDishes, setExpandAllDishes] = useState(false);
   const [expandedDishRestaurantIds, setExpandedDishRestaurantIds] = useState([]);
@@ -308,6 +310,10 @@ export function RestaurantsTab({
               if (value === TRI_STATE_VALUES.NO) return { key: field.key, label: field.negativeLabel, className: "!border-red-200 !bg-red-100 !text-red-700" };
               return { key: field.key, label: field.unknownLabel, className: "!border-amber-200 !bg-amber-100 !text-amber-800" };
             }).filter(Boolean);
+            const musicLevel = normalizeMusicLevel(restaurant.musicLevel);
+            const showMusicWarning = restaurantMusicAlertLevel !== "never" && (
+              musicLevel === MUSIC_LEVEL_VALUES.HIGH || (restaurantMusicAlertLevel === "high_or_unknown" && musicLevel === MUSIC_LEVEL_VALUES.UNKNOWN)
+            );
             return (
               <Card key={restaurant.id} className="rounded-3xl border-2 border-slate-200 bg-white shadow-sm">
                 <CardHeader className="flex flex-col gap-4 space-y-0 px-4 pt-5 pb-4 sm:px-6 sm:pt-6 sm:flex-row sm:items-start sm:justify-between">
@@ -318,6 +324,11 @@ export function RestaurantsTab({
                       {restaurant.city && <Badge variant="secondary">{restaurant.city}</Badge>}
                       {(restaurant.cuisines || []).map((cuisine) => <Badge key={cuisine} variant="secondary">{cuisine}</Badge>)}
                       {safetyBadges.map((badge) => <Badge key={badge.key} className={badge.className}>{badge.label}</Badge>)}
+                      {showMusicWarning ? (
+                        <Badge className={musicLevel === MUSIC_LEVEL_VALUES.HIGH ? "!border-red-200 !bg-red-100 !text-red-700" : "!border-amber-200 !bg-amber-100 !text-amber-800"}>
+                          {musicLevel === MUSIC_LEVEL_VALUES.HIGH ? "High music" : "Music unknown"}
+                        </Badge>
+                      ) : null}
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center gap-2 sm:justify-end">

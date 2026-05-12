@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { TabsContent } from "@/components/ui/tabs";
 
 import {
+  MUSIC_ALERT_LEVELS,
+  MUSIC_LEVEL_OPTIONS,
   RESTAURANT_ALERT_LEVELS,
   RESTAURANT_SAFETY_FIELDS,
   SECTION_CONTAINER,
@@ -82,6 +84,10 @@ export function SettingsTab(props) {
     setRestaurantSafetyDefault,
     restaurantAlertLevels,
     setRestaurantAlertLevel,
+    restaurantMusicDefault,
+    setRestaurantMusicDefault,
+    restaurantMusicAlertLevel,
+    setRestaurantMusicAlertLevel,
   } = props;
 
   const cuisineRows = data.cuisines.map((cuisine) => {
@@ -161,6 +167,33 @@ export function SettingsTab(props) {
                   </div>
                 </div>
               ))}
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                <div className="mb-2 font-bold text-slate-900">Music</div>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="space-y-1">
+                    <div className="text-xs font-semibold uppercase text-slate-700">Default</div>
+                    <Select value={restaurantMusicDefault} onValueChange={setRestaurantMusicDefault}>
+                      <SelectTrigger><SelectValue placeholder="Default value" /></SelectTrigger>
+                      <SelectContent>
+                        {MUSIC_LEVEL_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-xs font-semibold uppercase text-slate-700">Warn me on:</div>
+                    <Select value={restaurantMusicAlertLevel} onValueChange={setRestaurantMusicAlertLevel}>
+                      <SelectTrigger><SelectValue placeholder="Warning tags" /></SelectTrigger>
+                      <SelectContent>
+                        {MUSIC_ALERT_LEVELS.map((level) => (
+                          <SelectItem key={level.value} value={level.value}>{level.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>

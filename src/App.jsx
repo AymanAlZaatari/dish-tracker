@@ -29,6 +29,9 @@ import {
   EDIT_BUTTON_STYLE,
   LOG_BUTTON_STYLE,
   LOG_EXPERIENCE_BUTTON_STYLE,
+  MUSIC_ALERT_LEVELS,
+  MUSIC_LEVEL_OPTIONS,
+  MUSIC_LEVEL_VALUES,
   ORDER_TYPES,
   PORTION_SIZES,
   RESTAURANT_ALERT_LEVELS,
@@ -59,6 +62,7 @@ import {
   loadData,
   migrateData,
   normalizeDishName,
+  normalizeMusicLevel,
   normalizeNumericInput,
   normalizeTriState,
   ratingPillClass,
@@ -129,6 +133,41 @@ function TriStateSegmented({ label, value, onChange, compact = false }) {
   );
 }
 
+function MusicLevelSegmented({ label, value, onChange }) {
+  const currentValue = normalizeMusicLevel(value);
+
+  return (
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+      <Label className="min-w-0 flex-1 text-sm font-medium leading-tight text-slate-700">{label}</Label>
+      <div className="inline-grid shrink-0 grid-cols-3 overflow-hidden rounded-lg border border-slate-200 bg-white text-xs">
+        {MUSIC_LEVEL_OPTIONS.map((option) => {
+          const isActive = currentValue === option.value;
+          const selectedClass = option.value === MUSIC_LEVEL_VALUES.LOW
+            ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200 focus-visible:bg-emerald-200"
+            : option.value === MUSIC_LEVEL_VALUES.HIGH
+              ? "bg-red-100 text-red-800 hover:bg-red-200 focus-visible:bg-red-200"
+              : "bg-yellow-100 text-yellow-800 hover:bg-yellow-200 focus-visible:bg-yellow-200";
+          return (
+            <button
+              key={option.value}
+              type="button"
+              className={[
+                "h-8 min-w-9 px-2 font-medium text-slate-500 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300",
+                option.value !== MUSIC_LEVEL_VALUES.LOW ? "border-l border-slate-200" : "",
+                isActive ? selectedClass : "hover:bg-slate-50",
+              ].filter(Boolean).join(" ")}
+              onClick={() => onChange(option.value)}
+              aria-pressed={isActive}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function RestaurantSafetyControls({ values, onChange, compact = false }) {
   return (
     <div className={compact ? "grid gap-2 sm:grid-cols-2" : "grid gap-2 sm:grid-cols-2"}>
@@ -141,6 +180,7 @@ function RestaurantSafetyControls({ values, onChange, compact = false }) {
           onChange={(value) => onChange(field.key, value)}
         />
       ))}
+      <MusicLevelSegmented label="Music" value={values.musicLevel} onChange={(value) => onChange("musicLevel", value)} />
     </div>
   );
 }
@@ -528,6 +568,8 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
       kidsFriendly: normalizeTriState(form.kidsFriendly),
       noAlcohol: normalizeTriState(form.noAlcohol),
       noPork: normalizeTriState(form.noPork),
+      dedicatedSmokingArea: normalizeTriState(form.dedicatedSmokingArea),
+      musicLevel: normalizeMusicLevel(form.musicLevel),
     };
   }
 
@@ -576,6 +618,8 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
       kidsFriendly: normalizeTriState(restaurantForm.kidsFriendly),
       noAlcohol: normalizeTriState(restaurantForm.noAlcohol),
       noPork: normalizeTriState(restaurantForm.noPork),
+      dedicatedSmokingArea: normalizeTriState(restaurantForm.dedicatedSmokingArea),
+      musicLevel: normalizeMusicLevel(restaurantForm.musicLevel),
     };
 
     setData((prev) => {
@@ -1100,6 +1144,8 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
       kidsFriendly: normalizeTriState(r.kidsFriendly),
       noAlcohol: normalizeTriState(r.noAlcohol),
       noPork: normalizeTriState(r.noPork),
+      dedicatedSmokingArea: normalizeTriState(r.dedicatedSmokingArea),
+      musicLevel: normalizeMusicLevel(r.musicLevel),
     });
     setRestaurantOpen(true);
   }
@@ -1205,6 +1251,27 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     }));
   }
 
+  function setRestaurantMusicDefault(value) {
+    setData((prev) => ({
+      ...prev,
+      settings: {
+        ...prev.settings,
+        restaurantMusicDefault: normalizeMusicLevel(value),
+      },
+    }));
+  }
+
+  function setRestaurantMusicAlertLevel(value) {
+    const nextValue = MUSIC_ALERT_LEVELS.some((level) => level.value === value) ? value : "high_or_unknown";
+    setData((prev) => ({
+      ...prev,
+      settings: {
+        ...prev.settings,
+        restaurantMusicAlertLevel: nextValue,
+      },
+    }));
+  }
+
   function importJson(event) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -1259,6 +1326,10 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
         : "no_or_unknown",
     ])
   );
+  const restaurantMusicDefault = normalizeMusicLevel(data.settings?.restaurantMusicDefault, MUSIC_LEVEL_VALUES.UNKNOWN);
+  const restaurantMusicAlertLevel = ["high_only", "never"].includes(data.settings?.restaurantMusicAlertLevel)
+    ? data.settings.restaurantMusicAlertLevel
+    : "high_or_unknown";
   const experienceDishCatalogMatches = useMemo(() => {
     const query = normalizeDishName(experienceDishSearch || "");
     if (!query) return [];
@@ -1294,6 +1365,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     return {
       ...emptyRestaurantForm,
       ...restaurantSafetyDefaults,
+      musicLevel: restaurantMusicDefault,
     };
   }
 
@@ -1301,6 +1373,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     return {
       ...inlineRestaurantFormDefault,
       ...restaurantSafetyDefaults,
+      musicLevel: restaurantMusicDefault,
     };
   }
 
@@ -2041,6 +2114,8 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
             restaurantSummaries={restaurantSummaries}
             defaultStatsView={defaultRestaurantStatsView}
             openRestaurantFromDashboard={openRestaurantFromDashboard}
+            restaurantAlertLevels={restaurantAlertLevels}
+            restaurantMusicAlertLevel={restaurantMusicAlertLevel}
           />
 
           <RestaurantsTab
@@ -2078,6 +2153,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
             setDefaultBranch={setDefaultBranch}
             defaultStatsView={defaultRestaurantStatsView}
             restaurantAlertLevels={restaurantAlertLevels}
+            restaurantMusicAlertLevel={restaurantMusicAlertLevel}
           />
 
           <DishesTab
@@ -2173,6 +2249,10 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
             setRestaurantSafetyDefault={setRestaurantSafetyDefault}
             restaurantAlertLevels={restaurantAlertLevels}
             setRestaurantAlertLevel={setRestaurantAlertLevel}
+            restaurantMusicDefault={restaurantMusicDefault}
+            setRestaurantMusicDefault={setRestaurantMusicDefault}
+            restaurantMusicAlertLevel={restaurantMusicAlertLevel}
+            setRestaurantMusicAlertLevel={setRestaurantMusicAlertLevel}
           />
         </Tabs>
       </div>

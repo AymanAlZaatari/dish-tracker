@@ -11,11 +11,13 @@ import {
   DASHBOARD_CARD_STYLES,
   DELETE_BUTTON_STYLE,
   EDIT_BUTTON_STYLE,
+  MUSIC_LEVEL_VALUES,
   ORDER_TYPE_BADGE_STYLES,
+  RESTAURANT_SAFETY_FIELDS,
   SECTION_CONTAINER,
   TRI_STATE_VALUES,
 } from "@/lib/app/constants";
-import { normalizeTriState, ratingPillClass, valuePillClass } from "@/lib/app/data";
+import { normalizeMusicLevel, normalizeTriState, ratingPillClass, valuePillClass } from "@/lib/app/data";
 
 import { Stars } from "../shared";
 
@@ -35,6 +37,8 @@ export function DashboardTab({
   restaurantSummaries,
   defaultStatsView,
   openRestaurantFromDashboard,
+  restaurantAlertLevels,
+  restaurantMusicAlertLevel,
 }) {
   const [dishListRestaurant, setDishListRestaurant] = useState(null);
 
@@ -127,6 +131,8 @@ export function DashboardTab({
                 statsView={defaultStatsView}
                 onOpenRestaurant={openRestaurantFromDashboard}
                 onOpenDishes={setDishListRestaurant}
+                restaurantAlertLevels={restaurantAlertLevels}
+                restaurantMusicAlertLevel={restaurantMusicAlertLevel}
                 {...summary}
               />
             ))}
@@ -177,10 +183,24 @@ export function DashboardTab({
   );
 }
 
-function RestaurantOverviewCard({ restaurant, dishes, dishesCount, experiencesCount, avgDishRating, avgDishPrice, statsView, onOpenRestaurant, onOpenDishes }) {
+function RestaurantOverviewCard({ restaurant, dishes, dishesCount, experiencesCount, avgDishRating, avgDishPrice, statsView, onOpenRestaurant, onOpenDishes, restaurantAlertLevels, restaurantMusicAlertLevel }) {
   const cuisines = restaurant.cuisines?.length ? restaurant.cuisines : [];
   const hasLocation = restaurant.area || restaurant.city;
   const isInlineView = statsView === "rows";
+  const safetyBadges = RESTAURANT_SAFETY_FIELDS.map((field) => {
+    const value = normalizeTriState(restaurant[field.key]);
+    const alertLevel = restaurantAlertLevels?.[field.key] || "no_or_unknown";
+    const isAlert = alertLevel !== "never" && (
+      value === TRI_STATE_VALUES.NO || (alertLevel === "no_or_unknown" && value === TRI_STATE_VALUES.UNKNOWN)
+    );
+    if (!isAlert) return null;
+    if (value === TRI_STATE_VALUES.NO) return { key: field.key, label: field.negativeLabel, className: "!border-red-200 !bg-red-100 !text-red-700" };
+    return { key: field.key, label: field.unknownLabel, className: "!border-amber-200 !bg-amber-100 !text-amber-800" };
+  }).filter(Boolean);
+  const musicLevel = normalizeMusicLevel(restaurant.musicLevel);
+  const showMusicWarning = restaurantMusicAlertLevel !== "never" && (
+    musicLevel === MUSIC_LEVEL_VALUES.HIGH || (restaurantMusicAlertLevel === "high_or_unknown" && musicLevel === MUSIC_LEVEL_VALUES.UNKNOWN)
+  );
 
   return (
     <div className="rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/60 ring-1 ring-slate-100/80 sm:p-5">
@@ -212,8 +232,12 @@ function RestaurantOverviewCard({ restaurant, dishes, dishesCount, experiencesCo
                 <span>{cuisine}</span>
               </Badge>
             ))}
-            {normalizeTriState(restaurant.noAlcohol) === TRI_STATE_VALUES.NO ? <Badge className="!border-red-200 !bg-red-100 !text-red-700">Alcohol</Badge> : null}
-            {normalizeTriState(restaurant.noPork) === TRI_STATE_VALUES.NO ? <Badge className="!border-red-200 !bg-red-100 !text-red-700">Pork</Badge> : null}
+            {safetyBadges.map((badge) => <Badge key={badge.key} className={badge.className}>{badge.label}</Badge>)}
+            {showMusicWarning ? (
+              <Badge className={musicLevel === MUSIC_LEVEL_VALUES.HIGH ? "!border-red-200 !bg-red-100 !text-red-700" : "!border-amber-200 !bg-amber-100 !text-amber-800"}>
+                {musicLevel === MUSIC_LEVEL_VALUES.HIGH ? "High music" : "Music unknown"}
+              </Badge>
+            ) : null}
           </div>
         </div>
 

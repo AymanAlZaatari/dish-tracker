@@ -105,6 +105,16 @@ export const TRI_STATE_OPTIONS = [
   { value: TRI_STATE_VALUES.NO, label: "No" },
   { value: TRI_STATE_VALUES.UNKNOWN, label: "N/A" },
 ];
+export const MUSIC_LEVEL_VALUES = {
+  LOW: "low",
+  HIGH: "high",
+  UNKNOWN: "unknown",
+};
+export const MUSIC_LEVEL_OPTIONS = [
+  { value: MUSIC_LEVEL_VALUES.LOW, label: "Low" },
+  { value: MUSIC_LEVEL_VALUES.HIGH, label: "High" },
+  { value: MUSIC_LEVEL_VALUES.UNKNOWN, label: "N/A" },
+];
 export const RESTAURANT_SAFETY_FIELDS = [
   {
     key: "kidsFriendly",
@@ -134,10 +144,22 @@ export const RESTAURANT_SAFETY_FIELDS = [
     negativeLabel: "Pork",
     unknownLabel: "Pork unknown",
   },
+  {
+    key: "dedicatedSmokingArea",
+    label: "Dedicated smoking area",
+    positiveLabel: "Dedicated smoking area",
+    negativeLabel: "No dedicated smoking area",
+    unknownLabel: "Smoking area unknown",
+  },
 ];
 export const RESTAURANT_ALERT_LEVELS = [
   { value: "no_or_unknown", label: "No or Don't Know" },
   { value: "no_only", label: "No only" },
+  { value: "never", label: "Never" },
+];
+export const MUSIC_ALERT_LEVELS = [
+  { value: "high_or_unknown", label: "High or N/A" },
+  { value: "high_only", label: "High only" },
   { value: "never", label: "Never" },
 ];
 export const TOP_NAV_STYLES = {

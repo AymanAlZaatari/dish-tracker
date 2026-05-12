@@ -1,4 +1,4 @@
-import { TRI_STATE_VALUES } from "./constants";
+import { MUSIC_LEVEL_VALUES, TRI_STATE_VALUES } from "./constants";
 
 export const emptyRestaurantForm = {
   id: null,
@@ -16,6 +16,8 @@ export const emptyRestaurantForm = {
   kidsFriendly: TRI_STATE_VALUES.UNKNOWN,
   noAlcohol: TRI_STATE_VALUES.UNKNOWN,
   noPork: TRI_STATE_VALUES.UNKNOWN,
+  dedicatedSmokingArea: TRI_STATE_VALUES.UNKNOWN,
+  musicLevel: MUSIC_LEVEL_VALUES.UNKNOWN,
 };
 
 export const emptyBranchForm = {
@@ -78,4 +80,6 @@ export const inlineRestaurantFormDefault = {
   kidsFriendly: TRI_STATE_VALUES.UNKNOWN,
   noAlcohol: TRI_STATE_VALUES.UNKNOWN,
   noPork: TRI_STATE_VALUES.UNKNOWN,
+  dedicatedSmokingArea: TRI_STATE_VALUES.UNKNOWN,
+  musicLevel: MUSIC_LEVEL_VALUES.UNKNOWN,
 };
