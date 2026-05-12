@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-import { ChevronDown, ChevronUp, Download, LogOut, Pencil, Plus, Trash2, Upload } from "lucide-react";
+import { ChevronDown, ChevronUp, Database, Download, LogOut, Pencil, Plus, Trash2, Upload } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -450,8 +450,8 @@ export function SettingsTab(props) {
                 <Upload className="mr-2 h-4 w-4" /> Import JSON
               </Button>
               <input ref={importRef} type="file" accept="application/json" className="hidden" onChange={importJson} />
-              <Button type="button" variant="outline" className={TOP_ACTION_BUTTON_STYLES.import} onClick={seedSampleData}>
-                <Download className="mr-2 h-4 w-4" /> Load Seed Data
+              <Button type="button" variant="outline" className={TOP_ACTION_BUTTON_STYLES.seed} onClick={seedSampleData}>
+                <Database className="mr-2 h-4 w-4" /> Load Seed Data
               </Button>
             </div>
             <div className="border-t border-slate-200 pt-4">

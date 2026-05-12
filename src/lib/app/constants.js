@@ -161,7 +161,8 @@ export const TOP_ACTION_BUTTON_STYLES = {
   addRestaurant: "!border-emerald-200 !bg-emerald-50 !text-emerald-900 hover:!bg-emerald-100",
   addExperience: "!border-rose-200 !bg-rose-50 !text-rose-900 hover:!bg-rose-100",
   import: "!border-sky-200 !bg-sky-50 !text-sky-900 hover:!bg-sky-100",
-  export: "!border-violet-200 !bg-violet-50 !text-violet-900 hover:!bg-violet-100",
+  export: "!border-sky-200 !bg-sky-50 !text-sky-900 hover:!bg-sky-100",
+  seed: "!border-amber-300 !bg-amber-100 !text-amber-900 hover:!bg-amber-200",
   auth: "!border-red-300 !bg-red-100 !text-red-800 hover:!bg-red-200",
 };
 export const SAVE_BUTTON_STYLE = "!border-emerald-600 !bg-emerald-600 !text-white hover:!border-emerald-700 hover:!bg-emerald-700";
