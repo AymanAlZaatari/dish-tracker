@@ -324,18 +324,18 @@ export function RestaurantsTab({
             const showMusicWarning = restaurantMusicAlertLevel !== "never" && (
               musicLevel === MUSIC_LEVEL_VALUES.HIGH || (restaurantMusicAlertLevel === "high_or_unknown" && musicLevel === MUSIC_LEVEL_VALUES.UNKNOWN)
             );
+            const restaurantLocation = [restaurant.city, restaurant.area].filter(Boolean).join(" • ");
             return (
               <Card key={restaurant.id} className="rounded-3xl border-2 border-slate-200 bg-white shadow-sm">
                 <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0 px-4 pt-5 pb-4 sm:px-6 sm:pt-6">
                   <div className="min-w-0">
                     <CardTitle className="break-words text-2xl font-bold tracking-tight">{restaurant.name}</CardTitle>
-                    <div className="mt-3 flex flex-wrap gap-2.5 text-xs text-slate-600">
-                      {restaurant.area && <Badge variant="secondary">{restaurant.area}</Badge>}
-                      {restaurant.city && <Badge variant="secondary">{restaurant.city}</Badge>}
-                      {(restaurant.cuisines || []).map((cuisine) => <Badge key={cuisine} variant="secondary">{cuisine}</Badge>)}
-                      {safetyBadges.map((badge) => <Badge key={badge.key} className={badge.className}>{badge.label}</Badge>)}
+                    {restaurantLocation ? <div className="mt-1 text-sm font-semibold text-slate-500">{restaurantLocation}</div> : null}
+                    <div className="mt-3 flex flex-wrap gap-1.5 text-xs text-slate-600">
+                      {(restaurant.cuisines || []).map((cuisine) => <Badge key={cuisine} variant="secondary" className="px-2 py-0.5">{cuisine}</Badge>)}
+                      {safetyBadges.map((badge) => <Badge key={badge.key} className={`px-2 py-0.5 ${badge.className}`}>{badge.label}</Badge>)}
                       {showMusicWarning ? (
-                        <Badge className={musicLevel === MUSIC_LEVEL_VALUES.HIGH ? "!border-red-200 !bg-red-100 !text-red-700" : "!border-amber-200 !bg-amber-100 !text-amber-800"}>
+                        <Badge className={`px-2 py-0.5 ${musicLevel === MUSIC_LEVEL_VALUES.HIGH ? "!border-red-200 !bg-red-100 !text-red-700" : "!border-amber-200 !bg-amber-100 !text-amber-800"}`}>
                           {musicLevel === MUSIC_LEVEL_VALUES.HIGH ? "High music" : "Music unknown"}
                         </Badge>
                       ) : null}
