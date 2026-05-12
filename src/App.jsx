@@ -1442,6 +1442,14 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     setShowDishRestaurantSuggestions(false);
   }
 
+  function selectExperienceRestaurantSuggestion(restaurant) {
+    setExperienceForm((prev) => ({ ...prev, restaurantId: restaurant.id, dishId: "", branchId: "none" }));
+    setExperienceRestaurantSearch(restaurant.name);
+    setExperienceDishSearch("");
+    setShowExperienceRestaurantSuggestions(false);
+    setExperienceFormError("");
+  }
+
   function selectDishNameSuggestion(dish) {
     if (dish.restaurantId === dishForm.restaurantId) {
       setShowDishNameSuggestions(false);
@@ -1944,11 +1952,11 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                                     className="flex w-full items-center justify-between gap-3 border-b px-4 py-3 text-left last:border-b-0 hover:bg-slate-50"
                                     onPointerDown={(event) => {
                                       event.preventDefault();
-                                      setExperienceForm((prev) => ({ ...prev, restaurantId: restaurant.id, dishId: "", branchId: "none" }));
-                                      setExperienceRestaurantSearch(restaurant.name);
-                                      setExperienceDishSearch("");
-                                      setShowExperienceRestaurantSuggestions(false);
-                                      setExperienceFormError("");
+                                      selectExperienceRestaurantSuggestion(restaurant);
+                                    }}
+                                    onTouchStart={(event) => {
+                                      event.preventDefault();
+                                      selectExperienceRestaurantSuggestion(restaurant);
                                     }}
                                   >
                                     <span className="font-medium text-slate-900">{restaurant.name}</span>
