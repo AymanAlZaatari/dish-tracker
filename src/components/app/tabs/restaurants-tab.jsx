@@ -327,29 +327,31 @@ export function RestaurantsTab({
             const restaurantLocation = [restaurant.city, restaurant.area].filter(Boolean).join(" • ");
             return (
               <Card key={restaurant.id} className="rounded-3xl border-2 border-slate-200 bg-white shadow-sm">
-                <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0 px-4 pt-5 pb-4 sm:px-6 sm:pt-6">
-                  <div className="min-w-0">
-                    <CardTitle className="break-words text-2xl font-bold tracking-tight">{restaurant.name}</CardTitle>
-                    {restaurantLocation ? <div className="mt-1 text-sm font-semibold text-slate-500">{restaurantLocation}</div> : null}
-                    <div className="mt-3 flex flex-wrap gap-1.5 text-xs text-slate-600">
-                      {(restaurant.cuisines || []).map((cuisine) => <Badge key={cuisine} variant="secondary" className="px-2 py-0.5">{cuisine}</Badge>)}
-                      {safetyBadges.map((badge) => <Badge key={badge.key} className={`px-2 py-0.5 ${badge.className}`}>{badge.label}</Badge>)}
-                      {showMusicWarning ? (
-                        <Badge className={`px-2 py-0.5 ${musicLevel === MUSIC_LEVEL_VALUES.HIGH ? "!border-red-200 !bg-red-100 !text-red-700" : "!border-amber-200 !bg-amber-100 !text-amber-800"}`}>
-                          {musicLevel === MUSIC_LEVEL_VALUES.HIGH ? "High music" : "Music unknown"}
-                        </Badge>
-                      ) : null}
+                <CardHeader className="space-y-3 px-4 pt-5 pb-4 sm:px-6 sm:pt-6">
+                  <div className="flex flex-row items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <CardTitle className="break-words text-2xl font-bold tracking-tight">{restaurant.name}</CardTitle>
+                      {restaurantLocation ? <div className="mt-1 text-sm font-semibold text-slate-500">{restaurantLocation}</div> : null}
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${EDIT_BUTTON_STYLE}`} onClick={() => editRestaurant(restaurant)} aria-label={`Edit ${restaurant.name}`}>
+                        <Pencil className="h-4 w-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Edit</span>
+                      </Button>
+                      <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${DELETE_BUTTON_STYLE}`} onClick={() => deleteRestaurant(restaurant.id)} aria-label={`Delete ${restaurant.name}`}>
+                        <Trash2 className="h-4 w-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Delete</span>
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex shrink-0 items-center gap-2">
-                    <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${EDIT_BUTTON_STYLE}`} onClick={() => editRestaurant(restaurant)} aria-label={`Edit ${restaurant.name}`}>
-                      <Pencil className="h-4 w-4 sm:mr-2" />
-                      <span className="hidden sm:inline">Edit</span>
-                    </Button>
-                    <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${DELETE_BUTTON_STYLE}`} onClick={() => deleteRestaurant(restaurant.id)} aria-label={`Delete ${restaurant.name}`}>
-                      <Trash2 className="h-4 w-4 sm:mr-2" />
-                      <span className="hidden sm:inline">Delete</span>
-                    </Button>
+                  <div className="flex flex-wrap gap-2.5 text-xs text-slate-600">
+                    {(restaurant.cuisines || []).map((cuisine) => <Badge key={cuisine} variant="secondary">{cuisine}</Badge>)}
+                    {safetyBadges.map((badge) => <Badge key={badge.key} className={badge.className}>{badge.label}</Badge>)}
+                    {showMusicWarning ? (
+                      <Badge className={musicLevel === MUSIC_LEVEL_VALUES.HIGH ? "!border-red-200 !bg-red-100 !text-red-700" : "!border-amber-200 !bg-amber-100 !text-amber-800"}>
+                        {musicLevel === MUSIC_LEVEL_VALUES.HIGH ? "High music" : "Music unknown"}
+                      </Badge>
+                    ) : null}
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4 px-4 pb-5 text-sm text-slate-600 sm:px-6 sm:pb-6">
