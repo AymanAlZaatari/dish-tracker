@@ -78,16 +78,12 @@ export function DashboardTab({
       </div>
 
       <div className={`${SECTION_CONTAINER} grid gap-6 xl:grid-cols-2`}>
-        <Card className="overflow-hidden rounded-3xl border border-rose-200 bg-rose-50/70 shadow-sm xl:bg-white">
-          <CardHeader className="border-b border-rose-200 bg-rose-100/80 px-4 py-3 text-center sm:px-6">
-            <div className="flex flex-col items-center justify-center gap-3 xl:flex-row xl:justify-between">
+        <Card className="overflow-hidden rounded-3xl border border-amber-200 bg-amber-50/70 shadow-sm xl:bg-white">
+          <CardHeader className="border-b border-amber-200 bg-amber-100/80 px-4 py-3 text-center sm:px-6">
+            <div className="flex flex-col items-center justify-center">
               <div className="min-w-0">
-                <CardTitle className="text-base font-black uppercase tracking-[0.08em] text-rose-950 xl:text-lg">Recent Experiences</CardTitle>
-                <div className="mt-1 text-sm text-rose-900/75">Latest logged dishes with price, rating, and worth at a glance.</div>
-              </div>
-              <div className="rounded-2xl border border-rose-200 bg-white/75 px-3 py-2 text-center">
-                <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-rose-700">Showing</div>
-                <div className="text-sm font-semibold text-rose-950">{recentExperiences.length} items</div>
+                <CardTitle className="text-base font-black uppercase tracking-[0.08em] text-amber-950 xl:text-lg">Recent Experiences</CardTitle>
+                <div className="mt-1 text-sm text-amber-900/75">Latest logged dishes with price, rating, and worth at a glance.</div>
               </div>
             </div>
           </CardHeader>
@@ -113,16 +109,12 @@ export function DashboardTab({
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden rounded-3xl border border-emerald-200 bg-emerald-50/70 shadow-sm xl:col-start-auto xl:bg-white">
-          <CardHeader className="border-b border-emerald-200 bg-emerald-100/80 px-4 py-3 text-center sm:px-6">
-            <div className="flex flex-col items-center justify-center gap-3 xl:flex-row xl:justify-between">
+        <Card className="overflow-hidden rounded-3xl border border-sky-200 bg-sky-50/70 shadow-sm xl:col-start-auto xl:bg-white">
+          <CardHeader className="border-b border-sky-200 bg-sky-100/80 px-4 py-3 text-center sm:px-6">
+            <div className="flex flex-col items-center justify-center">
               <div className="min-w-0">
-                <CardTitle className="text-base font-black uppercase tracking-[0.08em] text-emerald-950 xl:text-lg">Restaurants Overview</CardTitle>
-                <div className="mt-1 text-sm text-emerald-900/75">Quick summaries of restaurant activity, ratings, and average dish price.</div>
-              </div>
-              <div className="rounded-2xl border border-emerald-200 bg-white/75 px-3 py-2 text-center">
-                <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-emerald-700">Showing</div>
-                <div className="text-sm font-semibold text-emerald-950">{restaurantSummaries.length} items</div>
+                <CardTitle className="text-base font-black uppercase tracking-[0.08em] text-sky-950 xl:text-lg">Restaurants Overview</CardTitle>
+                <div className="mt-1 text-sm text-sky-900/75">Quick summaries of restaurant activity, ratings, and average dish price.</div>
               </div>
             </div>
           </CardHeader>
