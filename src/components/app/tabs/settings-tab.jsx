@@ -146,7 +146,7 @@ export function SettingsTab(props) {
                       </Select>
                     </div>
                     <div className="space-y-1">
-                      <div className="text-xs font-semibold uppercase text-slate-700">Warning tag</div>
+                      <div className="text-xs font-semibold uppercase text-slate-700">Warn me on:</div>
                       <Select value={restaurantAlertLevels[field.key]} onValueChange={(value) => setRestaurantAlertLevel(field.key, value)}>
                         <SelectTrigger><SelectValue placeholder="Warning tags" /></SelectTrigger>
                         <SelectContent>
