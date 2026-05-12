@@ -1,8 +1,11 @@
-import { Pencil, Search, Trash2 } from "lucide-react";
+import { useState } from "react";
+
+import { Camera, CalendarDays, DollarSign, NotebookText, Pencil, Search, Star, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TabsContent } from "@/components/ui/tabs";
@@ -48,6 +51,14 @@ export function DishesTab({
   deleteDish,
   data,
 }) {
+  const [experienceListDish, setExperienceListDish] = useState(null);
+  const selectedDishExperiences = experienceListDish
+    ? [...(dishExperienceMap[experienceListDish.id] || [])].sort((a, b) => new Date(b.date) - new Date(a.date))
+    : [];
+  const selectedDishBranchById = Object.fromEntries(
+    data.branches.filter((branch) => branch.restaurantId === experienceListDish?.restaurantId).map((branch) => [branch.id, branch])
+  );
+
   return (
     <TabsContent value="dishes" className="space-y-6">
       <Card className="rounded-3xl border border-amber-200 bg-amber-50/60 shadow-sm">
@@ -218,10 +229,14 @@ export function DishesTab({
                   {dish.recommendations?.length ? <div className="rounded-2xl border border-slate-200 bg-white p-4"><div><span className="font-medium text-slate-900">Recommendations:</span><div className="mt-2 flex flex-wrap gap-2">{dish.recommendations.map((item) => <Badge key={item} className="!border-blue-200 !bg-blue-100 !text-blue-700">{item}</Badge>)}</div></div></div> : null}
                   {dish.alerts?.length ? <div className="rounded-2xl border border-slate-200 bg-white p-4"><div><span className="font-medium text-slate-900">Alerts:</span><div className="mt-2 flex flex-wrap gap-2">{dish.alerts.map((item) => <Badge key={item} className="!border-red-200 !bg-red-100 !text-red-700">{item}</Badge>)}</div></div></div> : null}
                   {dish.notes ? <div className="rounded-2xl border border-slate-200 bg-white p-4"><div className="mb-1 font-medium text-slate-900">Notes</div>{dish.notes}</div> : null}
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <button
+                    type="button"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:bg-slate-100"
+                    onClick={() => setExperienceListDish(dish)}
+                  >
                     <div className="font-medium text-slate-900">Experience count: {experiences.length}</div>
                     {experiences.length > 0 && <div className="mt-1 text-xs text-slate-500">Latest: {[...experiences].sort((a, b) => new Date(b.date) - new Date(a.date))[0].date}</div>}
-                  </div>
+                  </button>
                   <Button variant="outline" className={`w-full ${LOG_EXPERIENCE_BUTTON_STYLE}`} onClick={() => prepareLogExperience(dish.restaurantId, dish.id)}>Log another experience</Button>
                 </CardContent>
               </Card>
@@ -229,6 +244,62 @@ export function DishesTab({
           })}
         </div>
       </div>
+      <Dialog open={!!experienceListDish} onOpenChange={(open) => { if (!open) setExperienceListDish(null); }}>
+        <DialogContent className="max-h-[90vh] overflow-auto sm:max-w-2xl">
+          <div className="space-y-4">
+            <div className="pr-8">
+              <div className="text-xl font-bold text-slate-900">{experienceListDish?.name || "Dish"} experiences</div>
+              <div className="mt-1 text-sm text-slate-500">
+                {selectedDishExperiences.length} logged experience{selectedDishExperiences.length === 1 ? "" : "s"}
+              </div>
+            </div>
+            {selectedDishExperiences.length ? (
+              <div className="space-y-3">
+                {selectedDishExperiences.map((experience) => {
+                  const branch = selectedDishBranchById[experience.branchId];
+                  return (
+                    <div key={experience.id} className="rounded-2xl border border-slate-200 bg-white p-4">
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600">
+                        <Badge variant="secondary" className="gap-1.5 border-slate-200 bg-slate-100 text-slate-700">
+                          <CalendarDays className="h-3.5 w-3.5" />
+                          {experience.date}
+                        </Badge>
+                        <Badge className={`gap-1.5 ${ratingPillClass(experience.rating ? Number(experience.rating) : null)}`}>
+                          <Star className="h-3.5 w-3.5" />
+                          {experience.rating ? Number(experience.rating).toFixed(1) : "No rating"}
+                        </Badge>
+                        {experience.price != null && experience.price !== "" ? (
+                          <Badge variant="secondary" className="gap-1.5 border-slate-200 bg-slate-100 text-slate-700">
+                            <DollarSign className="h-3.5 w-3.5" />
+                            {Number(experience.price).toFixed(1)}
+                          </Badge>
+                        ) : null}
+                        {experience.orderType ? (
+                          <Badge variant="secondary" className="gap-1.5 border-slate-200 bg-slate-100 text-slate-700">
+                            <NotebookText className="h-3.5 w-3.5" />
+                            {experience.orderType}
+                          </Badge>
+                        ) : null}
+                        {branch ? <Badge variant="outline">Branch: {branch.name}</Badge> : null}
+                        {experience.images?.length ? (
+                          <Badge variant="secondary" className="gap-1.5 border-rose-200 bg-rose-50 text-rose-800">
+                            <Camera className="h-3.5 w-3.5" />
+                            {experience.images.length} image{experience.images.length === 1 ? "" : "s"}
+                          </Badge>
+                        ) : null}
+                      </div>
+                      {experience.valueForMoney ? <div className="mt-3 text-sm font-medium text-slate-700">Value: {experience.valueForMoney}</div> : null}
+                      {experience.notes ? <div className="mt-3 rounded-xl bg-slate-50 px-3 py-2 text-sm text-slate-700">{experience.notes}</div> : null}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-5 text-sm text-slate-600">No experiences logged for this dish yet.</div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </TabsContent>
   );
 }
