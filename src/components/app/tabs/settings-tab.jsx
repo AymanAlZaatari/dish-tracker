@@ -193,7 +193,7 @@ export function SettingsTab(props) {
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
-                          className="min-w-0 flex-1 items-center gap-3 text-left sm:flex"
+                          className="flex min-w-0 flex-1 flex-wrap items-center gap-2 text-left"
                           onClick={() => setExpandedTag(isExpanded ? null : tag)}
                           aria-expanded={isExpanded}
                         >
@@ -256,7 +256,7 @@ export function SettingsTab(props) {
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
-                          className="min-w-0 flex-1 items-center gap-3 text-left sm:flex"
+                          className="flex min-w-0 flex-1 flex-wrap items-center gap-2 text-left"
                           onClick={() => setExpandedCuisine(isExpanded ? null : cuisine)}
                           aria-expanded={isExpanded}
                         >
@@ -321,7 +321,7 @@ export function SettingsTab(props) {
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
-                          className="min-w-0 flex-1 items-center gap-3 text-left sm:flex"
+                          className="flex min-w-0 flex-1 flex-wrap items-center gap-2 text-left"
                           onClick={() => setExpandedCity(isExpanded ? null : city)}
                           aria-expanded={isExpanded}
                         >
@@ -386,7 +386,7 @@ export function SettingsTab(props) {
                       <div className="flex items-center gap-3">
                         <button
                           type="button"
-                          className="min-w-0 flex-1 items-center gap-3 text-left sm:flex"
+                          className="flex min-w-0 flex-1 flex-wrap items-center gap-2 text-left"
                           onClick={() => setExpandedArea(isExpanded ? null : area)}
                           aria-expanded={isExpanded}
                         >
