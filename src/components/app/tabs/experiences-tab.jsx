@@ -23,10 +23,82 @@ export function ExperiencesTab({
   editExperience,
   deleteExperience,
 }) {
+  const sortedExperiences = [...data.experiences].sort((a, b) => new Date(b.date) - new Date(a.date));
+
   return (
     <TabsContent value="experiences" className="space-y-4">
       <div className={`${SECTION_CONTAINER} space-y-3`}>
-        <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white">
+        <div className="space-y-3 md:hidden">
+          {sortedExperiences.map((experience) => {
+            const dish = dishesById[experience.dishId];
+            const restaurant = dish ? restaurantsById[dish.restaurantId] : null;
+            const branch = experience.branchId ? branchesById[experience.branchId] : null;
+            return (
+              <Card key={experience.id} className="min-w-0 rounded-3xl border border-slate-200 bg-white shadow-sm">
+                <CardContent className="space-y-4 p-4">
+                  <div className="flex min-w-0 items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="break-words text-xl font-bold text-slate-900">{dish?.name || "Unknown dish"}</div>
+                      <div className="mt-1 text-sm font-medium text-slate-600">{restaurant?.name || "Unknown restaurant"}</div>
+                      <div className="mt-1 text-xs text-slate-500">{experience.date}</div>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <Button variant="outline" size="sm" className={`px-2 ${EDIT_BUTTON_STYLE}`} onClick={() => editExperience(experience)} aria-label={`Edit ${dish?.name || "experience"}`}>
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" size="sm" className={`px-2 ${DELETE_BUTTON_STYLE}`} onClick={() => deleteExperience(experience.id)} aria-label={`Delete ${dish?.name || "experience"}`}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <Badge
+                      variant="secondary"
+                      className={ORDER_TYPE_BADGE_STYLES[experience.orderType] || "bg-slate-100 text-slate-700 border-slate-200"}
+                    >
+                      {experience.orderType}
+                    </Badge>
+                    {branch ? <Badge variant="secondary">{branch.name}</Badge> : null}
+                    {restaurant?.area ? <Badge variant="outline">{restaurant.area}</Badge> : null}
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="min-w-0 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-center">
+                      <div className="text-[0.7rem] font-bold uppercase text-slate-500">Price</div>
+                      <div className="mt-1 text-base font-bold text-slate-900">{experience.price != null ? `$${Number(experience.price).toFixed(1)}` : "—"}</div>
+                    </div>
+                    <div className={`min-w-0 rounded-2xl border p-3 text-center ${valuePillClass(experience.valueForMoney)}`}>
+                      <div className="text-[0.7rem] font-bold uppercase text-slate-500">$ Worth</div>
+                      <div className="mt-1 text-sm font-bold text-slate-900">{experience.valueForMoney || "—"}</div>
+                    </div>
+                    <div className={`min-w-0 rounded-2xl border p-3 text-center ${ratingPillClass(experience.rating)}`}>
+                      <div className="text-[0.7rem] font-bold uppercase text-slate-500">Rating</div>
+                      <div className="mt-1 text-base font-bold text-slate-900">{experience.rating != null ? Number(experience.rating).toFixed(1) : "—"}</div>
+                    </div>
+                  </div>
+
+                  {(experience.notes || experience.images?.length > 0) ? (
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                      {experience.notes ? <div className="text-sm text-slate-700">{experience.notes}</div> : null}
+                      {experience.images?.length > 0 ? (
+                        <div className="mt-3 grid grid-cols-2 gap-2">
+                          {experience.images.map((img) => (
+                            <div key={img.id} className="overflow-hidden rounded-2xl border bg-white">
+                              <img src={img.dataUrl} alt={img.name} className="h-24 w-full object-cover" />
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        <div className="hidden overflow-x-auto rounded-3xl border border-slate-200 bg-white md:block">
           <table className="min-w-full text-sm">
             <thead className="border-b border-slate-200 bg-slate-50 text-center text-sm font-semibold uppercase tracking-wide text-slate-600">
               <tr>
@@ -39,7 +111,7 @@ export function ExperiencesTab({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {[...data.experiences].sort((a, b) => new Date(b.date) - new Date(a.date)).map((experience) => {
+              {sortedExperiences.map((experience) => {
                 const dish = dishesById[experience.dishId];
                 const restaurant = dish ? restaurantsById[dish.restaurantId] : null;
                 const branch = experience.branchId ? branchesById[experience.branchId] : null;
