@@ -1195,6 +1195,13 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   function importJson(event) {
     const file = event.target.files?.[0];
     if (!file) return;
+    if (typeof window !== "undefined") {
+      const confirmed = window.confirm("Import JSON data? This will replace the data currently shown in the app.");
+      if (!confirmed) {
+        event.target.value = "";
+        return;
+      }
+    }
     const reader = new FileReader();
     reader.onload = () => {
       const parsed = safeParse(reader.result, null);
