@@ -78,20 +78,16 @@ export function DashboardTab({
       </div>
 
       <div className={`${SECTION_CONTAINER} grid gap-6 xl:grid-cols-2`}>
-        <div className="rounded-2xl border border-rose-200 bg-rose-100 px-4 py-3 text-center xl:hidden">
-          <div className="text-base font-black uppercase tracking-[0.08em] text-rose-950">Recent Experiences</div>
-        </div>
-
-        <Card className="rounded-3xl border border-rose-200 bg-rose-50/70 shadow-sm xl:border-0 xl:bg-white">
-          <CardHeader className="hidden xl:block border-b border-slate-100 pb-4">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <CardTitle className="font-bold">Recent Experiences</CardTitle>
-                <div className="mt-1 text-sm text-slate-500">Latest logged dishes with price, rating, and worth at a glance.</div>
+        <Card className="overflow-hidden rounded-3xl border border-rose-200 bg-rose-50/70 shadow-sm xl:bg-white">
+          <CardHeader className="border-b border-rose-200 bg-rose-100/80 px-4 py-3 text-center sm:px-6">
+            <div className="flex flex-col items-center justify-center gap-3 xl:flex-row xl:justify-between">
+              <div className="min-w-0">
+                <CardTitle className="text-base font-black uppercase tracking-[0.08em] text-rose-950 xl:text-lg">Recent Experiences</CardTitle>
+                <div className="mt-1 text-sm text-rose-900/75">Latest logged dishes with price, rating, and worth at a glance.</div>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-center">
-                <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-slate-500">Showing</div>
-                <div className="text-sm font-semibold text-slate-900">{recentExperiences.length} items</div>
+              <div className="rounded-2xl border border-rose-200 bg-white/75 px-3 py-2 text-center">
+                <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-rose-700">Showing</div>
+                <div className="text-sm font-semibold text-rose-950">{recentExperiences.length} items</div>
               </div>
             </div>
           </CardHeader>
@@ -117,20 +113,16 @@ export function DashboardTab({
           </CardContent>
         </Card>
 
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-100 px-4 py-3 text-center xl:hidden">
-          <div className="text-base font-black uppercase tracking-[0.08em] text-emerald-950">Restaurants Overview</div>
-        </div>
-
-        <Card className="rounded-3xl border border-emerald-200 bg-emerald-50/70 shadow-sm xl:col-start-auto xl:border-0 xl:bg-white">
-          <CardHeader className="hidden xl:block border-b border-slate-100 pb-4">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <CardTitle className="font-bold">Restaurants Overview</CardTitle>
-                <div className="mt-1 text-sm text-slate-500">Quick summaries of restaurant activity, ratings, and average dish price.</div>
+        <Card className="overflow-hidden rounded-3xl border border-emerald-200 bg-emerald-50/70 shadow-sm xl:col-start-auto xl:bg-white">
+          <CardHeader className="border-b border-emerald-200 bg-emerald-100/80 px-4 py-3 text-center sm:px-6">
+            <div className="flex flex-col items-center justify-center gap-3 xl:flex-row xl:justify-between">
+              <div className="min-w-0">
+                <CardTitle className="text-base font-black uppercase tracking-[0.08em] text-emerald-950 xl:text-lg">Restaurants Overview</CardTitle>
+                <div className="mt-1 text-sm text-emerald-900/75">Quick summaries of restaurant activity, ratings, and average dish price.</div>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-center">
-                <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-slate-500">Showing</div>
-                <div className="text-sm font-semibold text-slate-900">{restaurantSummaries.length} items</div>
+              <div className="rounded-2xl border border-emerald-200 bg-white/75 px-3 py-2 text-center">
+                <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-emerald-700">Showing</div>
+                <div className="text-sm font-semibold text-emerald-950">{restaurantSummaries.length} items</div>
               </div>
             </div>
           </CardHeader>
