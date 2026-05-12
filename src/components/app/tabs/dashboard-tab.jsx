@@ -96,6 +96,7 @@ export function DashboardTab({
                   statsView={defaultStatsView}
                   editExperience={editExperience}
                   deleteExperience={deleteExperience}
+                  onOpenRestaurant={openRestaurantFromDashboard}
                 />
               );
             })}
@@ -274,7 +275,7 @@ function RestaurantOverviewCard({ restaurant, dishes, dishesCount, experiencesCo
   );
 }
 
-function RecentExperienceCard({ experience, dish, restaurant, branch, statsView, editExperience, deleteExperience }) {
+function RecentExperienceCard({ experience, dish, restaurant, branch, statsView, editExperience, deleteExperience, onOpenRestaurant }) {
   const hasPrice = experience.price != null && experience.price !== "";
   const hasValue = Boolean(experience.valueForMoney);
   const hasRating = experience.rating != null;
@@ -294,10 +295,14 @@ function RecentExperienceCard({ experience, dish, restaurant, branch, statsView,
           </div>
           <div className={`flex flex-wrap items-center gap-2 ${MOBILE_CARD_META_CLASS}`}>
             {restaurant?.name ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-1 font-semibold text-indigo-800">
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-1 font-semibold text-indigo-800 underline-offset-4 hover:bg-indigo-100 hover:underline"
+                onClick={() => onOpenRestaurant?.(restaurant)}
+              >
                 <Store className="h-3.5 w-3.5" />
                 {restaurant.name}
-              </span>
+              </button>
             ) : null}
             <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-slate-700">
               <CalendarDays className="h-3.5 w-3.5" />
