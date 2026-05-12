@@ -1385,6 +1385,13 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     editDish(dish);
   }
 
+  function selectDishRestaurantSuggestion(restaurant) {
+    setDishForm((prev) => ({ ...prev, restaurantId: restaurant.id, branchId: "none" }));
+    setDishRestaurantSearch(restaurant.name);
+    setDishRestaurantError("");
+    setShowDishRestaurantSuggestions(false);
+  }
+
   function selectDishNameSuggestion(dish) {
     if (dish.restaurantId === dishForm.restaurantId) {
       setShowDishNameSuggestions(false);
@@ -1654,10 +1661,11 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                                     className="flex w-full items-center justify-between gap-3 border-b px-4 py-3 text-left last:border-b-0 hover:bg-slate-50"
                                     onPointerDown={(event) => {
                                       event.preventDefault();
-                                      setDishForm((prev) => ({ ...prev, restaurantId: restaurant.id, branchId: "none" }));
-                                      setDishRestaurantSearch(restaurant.name);
-                                      setDishRestaurantError("");
-                                      setShowDishRestaurantSuggestions(false);
+                                      selectDishRestaurantSuggestion(restaurant);
+                                    }}
+                                    onTouchStart={(event) => {
+                                      event.preventDefault();
+                                      selectDishRestaurantSuggestion(restaurant);
                                     }}
                                   >
                                     <span className="font-medium text-slate-900">{restaurant.name}</span>
@@ -1732,6 +1740,10 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                                 type="button"
                                 className="flex w-full items-start justify-between gap-3 border-b px-4 py-3 text-left last:border-b-0 hover:bg-slate-50"
                                 onPointerDown={(event) => {
+                                  event.preventDefault();
+                                  selectDishNameSuggestion(dish);
+                                }}
+                                onTouchStart={(event) => {
                                   event.preventDefault();
                                   selectDishNameSuggestion(dish);
                                 }}
