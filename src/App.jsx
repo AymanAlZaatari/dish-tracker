@@ -453,7 +453,11 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
       const experiences = data.experiences.filter((e) => dishIds.has(e.dishId));
       const avgDishRating = average(dishes.map((d) => computedDishRating(d.id)));
       const avgDishPrice = average(dishes.map((dish) => dish.price));
-      return { restaurant: displayRestaurant, dishesCount: dishes.length, experiencesCount: experiences.length, avgDishRating, avgDishPrice };
+      const dishSummaries = dishes.map((dish) => ({
+        ...dish,
+        computedRating: computedDishRating(dish.id),
+      }));
+      return { restaurant: displayRestaurant, dishes: dishSummaries, dishesCount: dishes.length, experiencesCount: experiences.length, avgDishRating, avgDishPrice };
     });
   }, [data, dishExperienceMap, restaurantsById]);
 

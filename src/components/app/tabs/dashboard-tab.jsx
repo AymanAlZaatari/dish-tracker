@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { CalendarDays, Camera, DollarSign, Filter, Heart, MapPin, NotebookText, Pencil, Sparkles, Star, Store, Trash2, UtensilsCrossed } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TabsContent } from "@/components/ui/tabs";
 
 import {
@@ -34,6 +36,8 @@ export function DashboardTab({
   defaultStatsView,
   openRestaurantFromDashboard,
 }) {
+  const [dishListRestaurant, setDishListRestaurant] = useState(null);
+
   return (
     <TabsContent value="dashboard" className="space-y-6">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
@@ -117,16 +121,62 @@ export function DashboardTab({
           </CardHeader>
           <CardContent className="space-y-4 pt-5">
             {restaurantSummaries.length === 0 ? <div className="text-sm text-slate-500">No restaurants yet.</div> : restaurantSummaries.map((summary) => (
-              <RestaurantOverviewCard key={summary.restaurant.id} statsView={defaultStatsView} onOpenRestaurant={openRestaurantFromDashboard} {...summary} />
+              <RestaurantOverviewCard
+                key={summary.restaurant.id}
+                statsView={defaultStatsView}
+                onOpenRestaurant={openRestaurantFromDashboard}
+                onOpenDishes={setDishListRestaurant}
+                {...summary}
+              />
             ))}
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={!!dishListRestaurant} onOpenChange={(open) => { if (!open) setDishListRestaurant(null); }}>
+        <DialogContent className="max-h-[90vh] overflow-auto sm:max-w-2xl">
+          <div className="space-y-4">
+            <div className="pr-8">
+              <div className="text-xl font-bold text-slate-900">{dishListRestaurant?.restaurant.name || "Restaurant"} dishes</div>
+              <div className="mt-1 text-sm text-slate-500">
+                {dishListRestaurant?.dishes.length || 0} available dish{dishListRestaurant?.dishes.length === 1 ? "" : "es"}
+              </div>
+            </div>
+            {dishListRestaurant?.dishes.length ? (
+              <div className="space-y-3">
+                {dishListRestaurant.dishes.map((dish) => (
+                  <div key={dish.id} className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="min-w-0">
+                        <div className="text-base font-bold text-slate-900">{dish.name}</div>
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-600">
+                          {dish.branchId ? <span>Branch-specific</span> : <span>All branches</span>}
+                          {dish.isWishlist ? <Badge>Wishlist</Badge> : null}
+                          {(dish.tags || []).slice(0, 3).map((tag) => (
+                            <Badge key={tag} variant="secondary" className="border-slate-200 bg-slate-100 text-slate-700">{tag}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        {dish.price ? <Badge variant="secondary" className="border-slate-200 bg-slate-100 text-slate-700">${Number(dish.price).toFixed(1)}</Badge> : null}
+                        {dish.computedRating ? <Badge className={ratingPillClass(dish.computedRating)}>{Number(dish.computedRating).toFixed(1)}</Badge> : null}
+                      </div>
+                    </div>
+                    {dish.notes ? <div className="mt-3 rounded-xl bg-slate-50 px-3 py-2 text-sm text-slate-700">{dish.notes}</div> : null}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-5 text-sm text-slate-600">No dishes recorded for this restaurant yet.</div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </TabsContent>
   );
 }
 
-function RestaurantOverviewCard({ restaurant, dishesCount, experiencesCount, avgDishRating, avgDishPrice, statsView, onOpenRestaurant }) {
+function RestaurantOverviewCard({ restaurant, dishes, dishesCount, experiencesCount, avgDishRating, avgDishPrice, statsView, onOpenRestaurant, onOpenDishes }) {
   const cuisines = restaurant.cuisines?.length ? restaurant.cuisines : [];
   const hasLocation = restaurant.area || restaurant.city;
   const isInlineView = statsView === "rows";
@@ -168,7 +218,17 @@ function RestaurantOverviewCard({ restaurant, dishesCount, experiencesCount, avg
 
         <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 sm:min-w-[10rem]">
           <div className="text-[11px] font-bold uppercase tracking-[0.08em] text-slate-500">Overview</div>
-          <div className="mt-1 text-[0.8rem] font-semibold text-slate-900 sm:text-sm">{dishesCount} dishes • {experiencesCount} experiences</div>
+          <div className="mt-1 flex flex-wrap items-center gap-1 text-[0.8rem] font-semibold text-slate-900 sm:text-sm">
+            <button
+              type="button"
+              className="rounded-full px-1 text-emerald-800 underline-offset-4 hover:underline"
+              onClick={() => onOpenDishes?.({ restaurant, dishes })}
+            >
+              {dishesCount} dishes
+            </button>
+            <span>•</span>
+            <span>{experiencesCount} experiences</span>
+          </div>
         </div>
       </div>
 
