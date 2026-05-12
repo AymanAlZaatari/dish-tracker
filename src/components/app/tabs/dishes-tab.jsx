@@ -233,14 +233,14 @@ export function DishesTab({
                     {(dish.tags || []).map((tag) => <Badge key={tag} variant="outline" style={tagChipStyle(data.tagColors?.[tag])}>{tag}</Badge>)}
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4 px-4 pb-5 text-sm text-slate-600 sm:px-6 sm:pb-6">
-                  {dish.recommendedBy ? <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><span className="font-medium text-slate-900">Recommended by:</span> {dish.recommendedBy}</div> : null}
-                  {dish.recommendations?.length ? <div className="rounded-2xl border border-slate-200 bg-white p-4"><div><span className="font-medium text-slate-900">Recommendations:</span><div className="mt-2 flex flex-wrap gap-2">{dish.recommendations.map((item) => <Badge key={item} className="!border-blue-200 !bg-blue-100 !text-blue-700">{item}</Badge>)}</div></div></div> : null}
-                  {dish.alerts?.length ? <div className="rounded-2xl border border-slate-200 bg-white p-4"><div><span className="font-medium text-slate-900">Alerts:</span><div className="mt-2 flex flex-wrap gap-2">{dish.alerts.map((item) => <Badge key={item} className="!border-red-200 !bg-red-100 !text-red-700">{item}</Badge>)}</div></div></div> : null}
-                  {dish.notes ? <div className="rounded-2xl border border-slate-200 bg-white p-4"><div className="mb-1 font-medium text-slate-900">Notes</div>{dish.notes}</div> : null}
+                <CardContent className="space-y-3 px-4 pb-5 text-sm text-slate-600 sm:px-6 sm:pb-6">
+                  {dish.recommendedBy ? <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3"><span className="font-medium text-slate-900">Recommended by:</span> {dish.recommendedBy}</div> : null}
+                  {dish.recommendations?.length ? <div className="rounded-2xl border border-slate-200 bg-white p-3"><div><span className="font-medium text-slate-900">Recommendations:</span><div className="mt-1.5 flex flex-wrap gap-2">{dish.recommendations.map((item) => <Badge key={item} className="!border-blue-200 !bg-blue-100 !text-blue-700">{item}</Badge>)}</div></div></div> : null}
+                  {dish.alerts?.length ? <div className="rounded-2xl border border-slate-200 bg-white p-3"><div><span className="font-medium text-slate-900">Alerts:</span><div className="mt-1.5 flex flex-wrap gap-2">{dish.alerts.map((item) => <Badge key={item} className="!border-red-200 !bg-red-100 !text-red-700">{item}</Badge>)}</div></div></div> : null}
+                  {dish.notes ? <div className="rounded-2xl border border-slate-200 bg-white p-3"><div className="mb-1 font-medium text-slate-900">Notes</div>{dish.notes}</div> : null}
                   <button
                     type="button"
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left transition hover:bg-slate-100"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left transition hover:bg-slate-100"
                     onClick={() => setExperienceListDish(dish)}
                   >
                     <div className="font-medium text-slate-900">Experience count: {experiences.length}</div>
