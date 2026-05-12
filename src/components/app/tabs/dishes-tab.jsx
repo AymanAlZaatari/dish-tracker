@@ -173,21 +173,21 @@ export function DishesTab({
 
         <div className="mb-5 border-t border-slate-200" />
 
-        <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
+        <div className="grid min-w-0 gap-5 lg:grid-cols-2 xl:grid-cols-3">
           {filteredDishes.map((dish) => {
             const restaurant = restaurantsById[dish.restaurantId];
             const branch = dish.branchId ? branchesById[dish.branchId] : null;
             const experiences = dishExperienceMap[dish.id] || [];
             const avgRating = computedDishRating(dish.id);
             return (
-              <Card key={dish.id} className="rounded-3xl border-2 border-slate-200 bg-white shadow-sm">
-                <CardHeader className="px-6 pt-6 space-y-3">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <CardTitle className="text-2xl font-bold tracking-tight">{dish.name}</CardTitle>
+              <Card key={dish.id} className="min-w-0 rounded-3xl border-2 border-slate-200 bg-white shadow-sm">
+                <CardHeader className="space-y-3 px-4 pt-5 sm:px-6 sm:pt-6">
+                  <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <CardTitle className="break-words text-2xl font-bold tracking-tight">{dish.name}</CardTitle>
                       <div className="mt-1 text-sm text-slate-500">{restaurant?.name || "Unknown restaurant"}</div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex shrink-0 flex-wrap items-center gap-2">
                       <Button variant="outline" size="sm" className={EDIT_BUTTON_STYLE} onClick={() => editDish(dish)}><Pencil className="mr-2 h-4 w-4" /> Edit</Button>
                       <Button variant="outline" size="sm" className={DELETE_BUTTON_STYLE} onClick={() => deleteDish(dish.id)}><Trash2 className="mr-2 h-4 w-4" /> Delete</Button>
                     </div>
@@ -201,9 +201,9 @@ export function DishesTab({
                     {(dish.tags || []).map((tag) => <Badge key={tag} variant="outline" style={tagChipStyle(data.tagColors?.[tag])}>{tag}</Badge>)}
                   </div>
                 </CardHeader>
-                <CardContent className="px-6 pb-6 space-y-4 text-sm text-slate-600">
+                <CardContent className="space-y-4 px-4 pb-5 text-sm text-slate-600 sm:px-6 sm:pb-6">
                   <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[0.8rem] font-semibold ${ratingPillClass(avgRating)}`}>
+                    <div className={`inline-flex max-w-full flex-wrap items-center gap-2 rounded-full border px-3 py-1 text-[0.8rem] font-semibold ${ratingPillClass(avgRating)}`}>
                       <span>Dish rating:</span>
                       {avgRating ? <><span>({avgRating.toFixed(1)})</span><Stars value={avgRating} /></> : <span>—</span>}
                     </div>
