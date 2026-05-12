@@ -185,7 +185,13 @@ export function DishesTab({
                   <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
                       <CardTitle className="break-words text-2xl font-bold tracking-tight">{dish.name}</CardTitle>
-                      <div className="mt-1 text-sm text-slate-500">{restaurant?.name || "Unknown restaurant"}</div>
+                      <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+                        <span>{restaurant?.name || "Unknown restaurant"}</span>
+                        <span className={`inline-flex max-w-full flex-wrap items-center gap-2 rounded-full border px-3 py-1 text-[0.8rem] font-semibold ${ratingPillClass(avgRating)}`}>
+                          <span>Rating:</span>
+                          {avgRating ? <><span>({avgRating.toFixed(1)})</span><Stars value={avgRating} /></> : <span>—</span>}
+                        </span>
+                      </div>
                     </div>
                     <div className="flex shrink-0 flex-wrap items-center gap-2">
                       <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${EDIT_BUTTON_STYLE}`} onClick={() => editDish(dish)} aria-label={`Edit ${dish.name}`}>
@@ -208,13 +214,7 @@ export function DishesTab({
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4 px-4 pb-5 text-sm text-slate-600 sm:px-6 sm:pb-6">
-                  <div className="grid gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className={`inline-flex max-w-full flex-wrap items-center gap-2 rounded-full border px-3 py-1 text-[0.8rem] font-semibold ${ratingPillClass(avgRating)}`}>
-                      <span>Dish rating:</span>
-                      {avgRating ? <><span>({avgRating.toFixed(1)})</span><Stars value={avgRating} /></> : <span>—</span>}
-                    </div>
-                    {dish.recommendedBy ? <div><span className="font-medium text-slate-900">Recommended by:</span> {dish.recommendedBy}</div> : null}
-                  </div>
+                  {dish.recommendedBy ? <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4"><span className="font-medium text-slate-900">Recommended by:</span> {dish.recommendedBy}</div> : null}
                   {dish.recommendations?.length ? <div className="rounded-2xl border border-slate-200 bg-white p-4"><div><span className="font-medium text-slate-900">Recommendations:</span><div className="mt-2 flex flex-wrap gap-2">{dish.recommendations.map((item) => <Badge key={item} className="!border-blue-200 !bg-blue-100 !text-blue-700">{item}</Badge>)}</div></div></div> : null}
                   {dish.alerts?.length ? <div className="rounded-2xl border border-slate-200 bg-white p-4"><div><span className="font-medium text-slate-900">Alerts:</span><div className="mt-2 flex flex-wrap gap-2">{dish.alerts.map((item) => <Badge key={item} className="!border-red-200 !bg-red-100 !text-red-700">{item}</Badge>)}</div></div></div> : null}
                   {dish.notes ? <div className="rounded-2xl border border-slate-200 bg-white p-4"><div className="mb-1 font-medium text-slate-900">Notes</div>{dish.notes}</div> : null}
