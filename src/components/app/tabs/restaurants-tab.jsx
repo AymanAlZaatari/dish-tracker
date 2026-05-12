@@ -46,8 +46,8 @@ export function RestaurantsTab({
   restaurantCuisineFilter,
   setRestaurantCuisineFilter,
   restaurantFilterCuisineOptions,
-  restaurantKidsFilter,
-  setRestaurantKidsFilter,
+  restaurantSafetyFilters,
+  setRestaurantSafetyFilters,
   filteredRestaurants,
   computedDishRating,
   editRestaurant,
@@ -64,6 +64,7 @@ export function RestaurantsTab({
   const [expandedDishRestaurantIds, setExpandedDishRestaurantIds] = useState([]);
   const [branchManagerRestaurantId, setBranchManagerRestaurantId] = useState(null);
   const statsView = defaultStatsView || "cards";
+  const selectedSafetyFilters = restaurantSafetyFilters || [];
 
   useEffect(() => {
     const visibleRestaurantIds = new Set(filteredRestaurants.map((restaurant) => restaurant.id));
@@ -95,6 +96,15 @@ export function RestaurantsTab({
   const branchManagerBranches = branchManagerRestaurantId
     ? data.branches.filter((branch) => branch.restaurantId === branchManagerRestaurantId)
     : [];
+
+  const toggleSafetyFilter = (fieldKey) => {
+    setRestaurantSafetyFilters((currentFilters) => {
+      const filters = currentFilters || [];
+      return filters.includes(fieldKey)
+        ? filters.filter((key) => key !== fieldKey)
+        : [...filters, fieldKey];
+    });
+  };
 
   return (
     <TabsContent value="restaurants" className="space-y-6">
@@ -230,7 +240,41 @@ export function RestaurantsTab({
           <Select value={restaurantCityFilter} onValueChange={setRestaurantCityFilter}><SelectTrigger><SelectValue placeholder="City" /></SelectTrigger><SelectContent><SelectItem value="all">All cities</SelectItem>{restaurantFilterCityOptions.map((city) => <SelectItem key={city} value={city}>{city}</SelectItem>)}</SelectContent></Select>
           <Select value={restaurantAreaFilter} onValueChange={setRestaurantAreaFilter}><SelectTrigger><SelectValue placeholder="Area" /></SelectTrigger><SelectContent><SelectItem value="all">All areas</SelectItem>{restaurantFilterAreaOptions.map((area) => <SelectItem key={area} value={area}>{area}</SelectItem>)}</SelectContent></Select>
           <Select value={restaurantCuisineFilter} onValueChange={setRestaurantCuisineFilter}><SelectTrigger><SelectValue placeholder="Cuisine" /></SelectTrigger><SelectContent><SelectItem value="all">All cuisines</SelectItem>{restaurantFilterCuisineOptions.map((cuisine) => <SelectItem key={cuisine} value={cuisine}>{cuisine}</SelectItem>)}</SelectContent></Select>
-          <Select value={restaurantKidsFilter} onValueChange={setRestaurantKidsFilter}><SelectTrigger><SelectValue placeholder="Kids friendly" /></SelectTrigger><SelectContent><SelectItem value="all">All restaurants</SelectItem><SelectItem value="kids">Kids friendly only</SelectItem></SelectContent></Select>
+          <div className="md:col-span-6">
+            <div className="flex flex-wrap gap-2">
+              {RESTAURANT_SAFETY_FIELDS.map((field) => {
+                const isSelected = selectedSafetyFilters.includes(field.key);
+                return (
+                  <Button
+                    key={field.key}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className={`rounded-full border px-3 py-2 text-xs font-bold sm:text-sm ${
+                      isSelected
+                        ? "border-emerald-300 bg-emerald-100 text-emerald-900 hover:bg-emerald-200"
+                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                    }`}
+                    onClick={() => toggleSafetyFilter(field.key)}
+                    aria-pressed={isSelected}
+                  >
+                    {field.positiveLabel}
+                  </Button>
+                );
+              })}
+              {selectedSafetyFilters.length > 0 ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-full px-3 text-xs font-semibold text-slate-600"
+                  onClick={() => setRestaurantSafetyFilters([])}
+                >
+                  Clear safety filters
+                </Button>
+              ) : null}
+            </div>
+          </div>
         </div>
 
         <div className="mb-5 border-t border-slate-200" />
