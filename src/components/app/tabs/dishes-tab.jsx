@@ -202,7 +202,7 @@ export function DishesTab({
             const avgRating = computedDishRating(dish.id);
             return (
               <Card key={dish.id} className="min-w-0 rounded-3xl border-2 border-slate-200 bg-white shadow-sm">
-                <CardHeader className="space-y-3 px-4 pt-5 sm:px-6 sm:pt-6">
+                <CardHeader className="space-y-3 px-4 pb-4 pt-5 sm:px-6 sm:pb-5 sm:pt-6">
                   <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
                       <CardTitle className="break-words text-2xl font-bold tracking-tight">{dish.name}</CardTitle>
