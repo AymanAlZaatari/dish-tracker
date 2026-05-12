@@ -32,6 +32,7 @@ export function DashboardTab({
   deleteExperience,
   restaurantSummaries,
   defaultStatsView,
+  openRestaurantFromDashboard,
 }) {
   return (
     <TabsContent value="dashboard" className="space-y-6">
@@ -116,7 +117,7 @@ export function DashboardTab({
           </CardHeader>
           <CardContent className="space-y-4 pt-5">
             {restaurantSummaries.length === 0 ? <div className="text-sm text-slate-500">No restaurants yet.</div> : restaurantSummaries.map((summary) => (
-              <RestaurantOverviewCard key={summary.restaurant.id} statsView={defaultStatsView} {...summary} />
+              <RestaurantOverviewCard key={summary.restaurant.id} statsView={defaultStatsView} onOpenRestaurant={openRestaurantFromDashboard} {...summary} />
             ))}
           </CardContent>
         </Card>
@@ -125,7 +126,7 @@ export function DashboardTab({
   );
 }
 
-function RestaurantOverviewCard({ restaurant, dishesCount, experiencesCount, avgDishRating, avgDishPrice, statsView }) {
+function RestaurantOverviewCard({ restaurant, dishesCount, experiencesCount, avgDishRating, avgDishPrice, statsView, onOpenRestaurant }) {
   const cuisines = restaurant.cuisines?.length ? restaurant.cuisines : [];
   const hasLocation = restaurant.area || restaurant.city;
   const isInlineView = statsView === "rows";
@@ -139,7 +140,13 @@ function RestaurantOverviewCard({ restaurant, dishesCount, experiencesCount, avg
               <Store className="h-4 w-4" />
             </div>
             <div className="min-w-0">
-              <div className={MOBILE_CARD_TITLE_CLASS}>{restaurant.name}</div>
+              <button
+                type="button"
+                className={`${MOBILE_CARD_TITLE_CLASS} text-left underline-offset-4 hover:underline`}
+                onClick={() => onOpenRestaurant?.(restaurant)}
+              >
+                {restaurant.name}
+              </button>
             </div>
           </div>
 

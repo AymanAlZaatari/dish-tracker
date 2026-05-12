@@ -1149,6 +1149,15 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     setTab("dishes");
   }
 
+  function openRestaurantFromDashboard(restaurant) {
+    setRestaurantSearch(restaurant?.name || "");
+    setRestaurantCityFilter("all");
+    setRestaurantAreaFilter("all");
+    setRestaurantCuisineFilter("all");
+    setRestaurantKidsFilter("all");
+    setTab("restaurants");
+  }
+
   function openNewExperienceDialog() {
     resetExperienceForm();
     setExperienceOpen(true);
@@ -2027,6 +2036,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
             deleteExperience={deleteExperience}
             restaurantSummaries={restaurantSummaries}
             defaultStatsView={defaultRestaurantStatsView}
+            openRestaurantFromDashboard={openRestaurantFromDashboard}
           />
 
           <RestaurantsTab
