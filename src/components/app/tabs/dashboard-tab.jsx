@@ -95,7 +95,7 @@ export function DashboardTab({
               </div>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4 pt-5">
+          <CardContent className="space-y-4 px-4 pb-4 pt-5 sm:px-6 sm:pb-6">
             {recentExperiences.length === 0 ? <div className="text-sm text-slate-500">No experiences yet.</div> : recentExperiences.map((experience) => {
               const dish = dishesById[experience.dishId];
               const restaurant = dish ? restaurantsById[dish.restaurantId] : null;
@@ -134,7 +134,7 @@ export function DashboardTab({
               </div>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4 pt-5">
+          <CardContent className="space-y-4 px-4 pb-4 pt-5 sm:px-6 sm:pb-6">
             {restaurantSummaries.length === 0 ? <div className="text-sm text-slate-500">No restaurants yet.</div> : restaurantSummaries.map((summary) => (
               <RestaurantOverviewCard
                 key={summary.restaurant.id}
