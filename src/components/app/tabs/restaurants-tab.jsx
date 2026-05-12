@@ -264,8 +264,8 @@ export function RestaurantsTab({
                     size="sm"
                     className={`rounded-full border px-3 py-2 text-xs font-bold sm:text-sm ${
                       isSelected
-                        ? "border-emerald-300 bg-emerald-100 text-emerald-900 hover:bg-emerald-200"
-                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                        ? "!border-emerald-400 !bg-emerald-100 !text-emerald-950 hover:!bg-emerald-200"
+                        : "!border-slate-200 !bg-white !text-slate-700 hover:!bg-emerald-50 hover:!text-emerald-900"
                     }`}
                     onClick={() => toggleSafetyFilter(field.key)}
                     aria-pressed={isSelected}
