@@ -59,11 +59,11 @@ export function DashboardTab({
       </div>
 
       <div className={`${SECTION_CONTAINER} grid gap-6 xl:grid-cols-2`}>
-        <div className="rounded-2xl border border-slate-300 bg-slate-200/70 px-4 py-3 text-center xl:hidden">
-          <div className="text-base font-black uppercase tracking-[0.08em] text-slate-900">Recent Experiences</div>
+        <div className="rounded-2xl border border-rose-200 bg-rose-100 px-4 py-3 text-center xl:hidden">
+          <div className="text-base font-black uppercase tracking-[0.08em] text-rose-950">Recent Experiences</div>
         </div>
 
-        <Card className="rounded-3xl border-0 shadow-sm">
+        <Card className="rounded-3xl border border-rose-200 bg-rose-50/70 shadow-sm xl:border-0 xl:bg-white">
           <CardHeader className="hidden xl:block border-b border-slate-100 pb-4">
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -97,11 +97,11 @@ export function DashboardTab({
           </CardContent>
         </Card>
 
-        <div className="rounded-2xl border border-slate-300 bg-slate-200/70 px-4 py-3 text-center xl:hidden">
-          <div className="text-base font-black uppercase tracking-[0.08em] text-slate-900">Restaurants Overview</div>
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-100 px-4 py-3 text-center xl:hidden">
+          <div className="text-base font-black uppercase tracking-[0.08em] text-emerald-950">Restaurants Overview</div>
         </div>
 
-        <Card className="rounded-3xl border-0 shadow-sm xl:col-start-auto">
+        <Card className="rounded-3xl border border-emerald-200 bg-emerald-50/70 shadow-sm xl:col-start-auto xl:border-0 xl:bg-white">
           <CardHeader className="hidden xl:block border-b border-slate-100 pb-4">
             <div className="flex items-center justify-between gap-4">
               <div>
