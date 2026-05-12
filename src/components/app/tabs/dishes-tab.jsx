@@ -204,10 +204,10 @@ export function DishesTab({
               <Card key={dish.id} className="min-w-0 rounded-3xl border-2 border-slate-200 bg-white shadow-sm">
                 <CardHeader className="space-y-3 px-4 pb-4 pt-5 sm:px-6 sm:pb-5 sm:pt-6">
                   <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <CardTitle className="break-words text-2xl font-bold tracking-tight">{dish.name}</CardTitle>
                       <div className="mt-1 flex min-w-0 items-center justify-between gap-2 text-sm text-slate-500">
-                        <span className="min-w-0 truncate">{restaurant?.name || "Unknown restaurant"}</span>
+                        <span className="min-w-0 truncate">{[restaurant?.name || "Unknown restaurant", restaurant?.city].filter(Boolean).join(" • ")}</span>
                         <span className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[0.75rem] font-semibold ${ratingPillClass(avgRating)}`}>
                           {avgRating ? <><span>{avgRating.toFixed(1)}</span><Stars value={avgRating} size="sm" /></> : <span>—</span>}
                         </span>
