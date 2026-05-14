@@ -81,6 +81,61 @@ import { ExperiencesTab } from "./components/app/tabs/experiences-tab";
 import { RestaurantsTab } from "./components/app/tabs/restaurants-tab";
 import { SettingsTab } from "./components/app/tabs/settings-tab";
 
+const EXPERIENCE_IMAGE_MAX_DIMENSION = 1280;
+const EXPERIENCE_IMAGE_QUALITY = 0.72;
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+function resizeExperienceImage(dataUrl, fileName) {
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return Promise.resolve({ id: uid(), name: fileName, dataUrl });
+  }
+
+  return new Promise((resolve) => {
+    const image = new window.Image();
+    image.onload = () => {
+      const width = image.naturalWidth || image.width;
+      const height = image.naturalHeight || image.height;
+      if (!width || !height) {
+        resolve({ id: uid(), name: fileName, dataUrl });
+        return;
+      }
+
+      const scale = Math.min(1, EXPERIENCE_IMAGE_MAX_DIMENSION / Math.max(width, height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(width * scale));
+      canvas.height = Math.max(1, Math.round(height * scale));
+
+      const context = canvas.getContext("2d");
+      if (!context) {
+        resolve({ id: uid(), name: fileName, dataUrl });
+        return;
+      }
+
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      resolve({
+        id: uid(),
+        name: fileName,
+        dataUrl: canvas.toDataURL("image/jpeg", EXPERIENCE_IMAGE_QUALITY),
+      });
+    };
+    image.onerror = () => resolve({ id: uid(), name: fileName, dataUrl });
+    image.src = dataUrl;
+  });
+}
+
+async function buildExperienceImage(file) {
+  const dataUrl = await readFileAsDataUrl(file);
+  return resizeExperienceImage(dataUrl, file.name);
+}
+
 function rankSuggestions(items, query, getLabel) {
   const normalizedQuery = query.trim().toLowerCase();
   const options = items.map((item) => ({ item, label: getLabel(item) }));
@@ -1345,11 +1400,12 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   function handleExperienceImageUpload(event) {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
-    Promise.all(files.map((file) => new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve({ id: uid(), name: file.name, dataUrl: reader.result });
-      reader.readAsDataURL(file);
-    }))).then((images) => setExperienceForm((prev) => ({ ...prev, images: [...prev.images, ...images] })));
+    Promise.all(files.map(buildExperienceImage))
+      .then((images) => setExperienceForm((prev) => ({ ...prev, images: [...(prev.images || []), ...images] })))
+      .catch((error) => {
+        console.error(error);
+        setExperienceFormError("Image upload failed. Try a smaller image or a different file.");
+      });
     event.target.value = "";
   }
 
