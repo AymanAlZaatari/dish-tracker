@@ -14,7 +14,6 @@ import {
   MUSIC_LEVEL_VALUES,
   ORDER_TYPE_BADGE_STYLES,
   RESTAURANT_SAFETY_FIELDS,
-  SECTION_CONTAINER,
   TRI_STATE_VALUES,
 } from "@/lib/app/constants";
 import { normalizeMusicLevel, normalizeTriState, ratingPillClass, valuePillClass } from "@/lib/app/data";
@@ -77,8 +76,8 @@ export function DashboardTab({
         ))}
       </div>
 
-      <div className={`${SECTION_CONTAINER} grid gap-6 xl:grid-cols-2`}>
-        <Card className="overflow-hidden rounded-3xl border border-amber-200 bg-amber-50/70 shadow-sm xl:bg-white">
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-2">
+        <Card className="overflow-hidden rounded-[1.5rem] border border-amber-200 bg-amber-50/70 shadow-sm sm:rounded-3xl xl:bg-white">
           <CardHeader className="border-b border-amber-200 bg-amber-100/80 px-4 py-3 text-center sm:px-6">
             <div className="flex flex-col items-center justify-center">
               <div className="min-w-0">
@@ -87,7 +86,7 @@ export function DashboardTab({
               </div>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4 px-4 pb-4 pt-5 sm:px-6 sm:pb-6">
+          <CardContent className="space-y-3 px-3 pb-3 pt-4 sm:space-y-4 sm:px-6 sm:pb-6 sm:pt-5">
             {recentExperiences.length === 0 ? <div className="text-sm text-slate-500">No experiences yet.</div> : recentExperiences.map((experience) => {
               const dish = dishesById[experience.dishId];
               const restaurant = dish ? restaurantsById[dish.restaurantId] : null;
@@ -109,7 +108,7 @@ export function DashboardTab({
           </CardContent>
         </Card>
 
-        <Card className="overflow-hidden rounded-3xl border border-sky-200 bg-sky-50/70 shadow-sm xl:col-start-auto xl:bg-white">
+        <Card className="overflow-hidden rounded-[1.5rem] border border-sky-200 bg-sky-50/70 shadow-sm sm:rounded-3xl xl:col-start-auto xl:bg-white">
           <CardHeader className="border-b border-sky-200 bg-sky-100/80 px-4 py-3 text-center sm:px-6">
             <div className="flex flex-col items-center justify-center">
               <div className="min-w-0">
@@ -118,7 +117,7 @@ export function DashboardTab({
               </div>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4 px-4 pb-4 pt-5 sm:px-6 sm:pb-6">
+          <CardContent className="space-y-3 px-3 pb-3 pt-4 sm:space-y-4 sm:px-6 sm:pb-6 sm:pt-5">
             {restaurantSummaries.length === 0 ? <div className="text-sm text-slate-500">No restaurants yet.</div> : restaurantSummaries.map((summary) => (
               <RestaurantOverviewCard
                 key={summary.restaurant.id}
@@ -197,7 +196,7 @@ function RestaurantOverviewCard({ restaurant, dishes, dishesCount, experiencesCo
   );
 
   return (
-    <div className="rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/60 ring-1 ring-slate-100/80 sm:p-5">
+    <div className="rounded-[1.25rem] border border-slate-200 bg-white p-3 shadow-sm shadow-slate-200/60 ring-1 ring-slate-100/80 sm:rounded-[1.75rem] sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 space-y-2">
           <div className="flex items-center gap-2">
@@ -302,7 +301,7 @@ function RecentExperienceCard({ experience, dish, restaurant, branch, statsView,
   const isInlineView = statsView === "rows";
 
   return (
-    <div className="rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/60 ring-1 ring-slate-100/80 sm:p-5">
+    <div className="rounded-[1.25rem] border border-slate-200 bg-white p-3 shadow-sm shadow-slate-200/60 ring-1 ring-slate-100/80 sm:rounded-[1.75rem] sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 space-y-2">
           <div className="flex items-center gap-2">
