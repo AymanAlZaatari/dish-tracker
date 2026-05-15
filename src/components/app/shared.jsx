@@ -1,8 +1,8 @@
-import { Star, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -57,6 +57,53 @@ export function Stars({ value, size = "md" }) {
         <Star key={i} className={`${starSizeClass} ${i < Math.round(n) ? "fill-current text-yellow-500" : "text-slate-300"}`} />
       ))}
     </div>
+  );
+}
+
+export function ImageViewerDialog({ open, onOpenChange, images = [], index = 0, onIndexChange }) {
+  const imageCount = images.length;
+  const currentIndex = imageCount ? Math.min(Math.max(index, 0), imageCount - 1) : 0;
+  const currentImage = images[currentIndex] || null;
+  const canNavigate = imageCount > 1;
+
+  function showPrevious() {
+    if (!imageCount) return;
+    onIndexChange?.((currentIndex - 1 + imageCount) % imageCount);
+  }
+
+  function showNext() {
+    if (!imageCount) return;
+    onIndexChange?.((currentIndex + 1) % imageCount);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[92vh] max-w-4xl overflow-auto bg-slate-950 p-3 text-white sm:p-4">
+        <div className="flex items-center justify-between gap-3 pr-12">
+          <div className="min-w-0">
+            <div className="truncate text-sm font-semibold sm:text-base">{currentImage?.name || "Experience image"}</div>
+            {imageCount > 1 ? <div className="mt-1 text-xs text-slate-300">{currentIndex + 1} of {imageCount}</div> : null}
+          </div>
+        </div>
+        <div className="mt-3 flex items-center gap-2">
+          {canNavigate ? (
+            <Button type="button" variant="outline" size="icon" className="h-10 w-10 shrink-0 border-white/30 bg-white/10 text-white hover:bg-white/20" onClick={showPrevious} aria-label="Previous image">
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+          ) : null}
+          <div className="flex min-h-[45vh] flex-1 items-center justify-center overflow-hidden rounded-2xl bg-black">
+            {currentImage ? (
+              <img src={currentImage.dataUrl} alt={currentImage.name || "Experience image"} className="max-h-[74vh] w-full object-contain" />
+            ) : null}
+          </div>
+          {canNavigate ? (
+            <Button type="button" variant="outline" size="icon" className="h-10 w-10 shrink-0 border-white/30 bg-white/10 text-white hover:bg-white/20" onClick={showNext} aria-label="Next image">
+              <ChevronRight className="h-5 w-5" />
+            </Button>
+          ) : null}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

@@ -18,7 +18,7 @@ import {
 } from "@/lib/app/constants";
 import { normalizeMusicLevel, normalizeTriState, ratingPillClass, valuePillClass } from "@/lib/app/data";
 
-import { Stars } from "../shared";
+import { ImageViewerDialog, Stars } from "../shared";
 
 const MOBILE_CARD_TITLE_CLASS = "text-[1.12rem] font-bold text-slate-900 sm:text-lg";
 const MOBILE_CARD_META_CLASS = "text-[0.8rem] font-medium text-slate-500 sm:text-sm";
@@ -40,6 +40,7 @@ export function DashboardTab({
   restaurantMusicAlertLevel,
 }) {
   const [dishListRestaurant, setDishListRestaurant] = useState(null);
+  const [imageViewer, setImageViewer] = useState({ open: false, images: [], index: 0 });
 
   useEffect(() => {
     const closePopup = (event) => {
@@ -102,6 +103,7 @@ export function DashboardTab({
                   editExperience={editExperience}
                   deleteExperience={deleteExperience}
                   onOpenRestaurant={openRestaurantFromDashboard}
+                  onOpenImages={(images, index = 0) => setImageViewer({ open: true, images, index })}
                 />
               );
             })}
@@ -172,6 +174,14 @@ export function DashboardTab({
           </div>
         </DialogContent>
       </Dialog>
+
+      <ImageViewerDialog
+        open={imageViewer.open}
+        images={imageViewer.images}
+        index={imageViewer.index}
+        onIndexChange={(index) => setImageViewer((prev) => ({ ...prev, index }))}
+        onOpenChange={(open) => setImageViewer((prev) => ({ ...prev, open }))}
+      />
     </TabsContent>
   );
 }
@@ -292,7 +302,7 @@ function RestaurantOverviewCard({ restaurant, dishes, dishesCount, experiencesCo
   );
 }
 
-function RecentExperienceCard({ experience, dish, restaurant, branch, statsView, editExperience, deleteExperience, onOpenRestaurant }) {
+function RecentExperienceCard({ experience, dish, restaurant, branch, statsView, editExperience, deleteExperience, onOpenRestaurant, onOpenImages }) {
   const hasPrice = experience.price != null && experience.price !== "";
   const hasValue = Boolean(experience.valueForMoney);
   const hasRating = experience.rating != null;
@@ -405,10 +415,14 @@ function RecentExperienceCard({ experience, dish, restaurant, branch, statsView,
           )}
 
           {imageCount > 0 ? (
-            <Badge variant="secondary" className="gap-1.5 bg-rose-50 text-rose-800 border-rose-200">
+            <button
+              type="button"
+              className="inline-flex items-center rounded-full border border-rose-200 bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-800 transition hover:bg-rose-100"
+              onClick={() => onOpenImages?.(experience.images || [], 0)}
+            >
               <Camera className="h-3.5 w-3.5" />
               <span>{imageCount} image{imageCount === 1 ? "" : "s"}</span>
-            </Badge>
+            </button>
           ) : null}
         </div>
       ) : null}

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +14,7 @@ import {
 } from "@/lib/app/constants";
 import { ratingPillClass, valuePillClass } from "@/lib/app/data";
 
-import { Stars } from "../shared";
+import { ImageViewerDialog, Stars } from "../shared";
 
 export function ExperiencesTab({
   data,
@@ -24,6 +25,11 @@ export function ExperiencesTab({
   deleteExperience,
 }) {
   const sortedExperiences = [...data.experiences].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const [imageViewer, setImageViewer] = useState({ open: false, images: [], index: 0 });
+
+  function openImageViewer(images, index = 0) {
+    setImageViewer({ open: true, images, index });
+  }
 
   return (
     <TabsContent value="experiences" className="space-y-4">
@@ -83,10 +89,10 @@ export function ExperiencesTab({
                       {experience.notes ? <div className="text-sm text-slate-700">{experience.notes}</div> : null}
                       {experience.images?.length > 0 ? (
                         <div className="mt-3 grid grid-cols-2 gap-2">
-                          {experience.images.map((img) => (
-                            <div key={img.id} className="overflow-hidden rounded-2xl border bg-white">
+                          {experience.images.map((img, index) => (
+                            <button key={img.id} type="button" className="overflow-hidden rounded-2xl border bg-white text-left" onClick={() => openImageViewer(experience.images, index)} aria-label={`Open ${img.name || "experience image"}`}>
                               <img src={img.dataUrl} alt={img.name} className="h-24 w-full object-cover" />
-                            </div>
+                            </button>
                           ))}
                         </div>
                       ) : null}
@@ -137,7 +143,11 @@ export function ExperiencesTab({
                             {experience.notes ? <div className="text-sm text-slate-700">{experience.notes}</div> : null}
                             {experience.images?.length > 0 && (
                               <div className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-4">
-                                {experience.images.map((img) => <div key={img.id} className="overflow-hidden rounded-2xl border bg-white"><img src={img.dataUrl} alt={img.name} className="h-24 w-full object-cover" /></div>)}
+                                {experience.images.map((img, index) => (
+                                  <button key={img.id} type="button" className="overflow-hidden rounded-2xl border bg-white text-left" onClick={() => openImageViewer(experience.images, index)} aria-label={`Open ${img.name || "experience image"}`}>
+                                    <img src={img.dataUrl} alt={img.name} className="h-24 w-full object-cover" />
+                                  </button>
+                                ))}
                               </div>
                             )}
                           </div>
@@ -181,6 +191,13 @@ export function ExperiencesTab({
         </div>
         {data.experiences.length === 0 && <Card className="rounded-3xl border-0 shadow-sm"><CardContent className="p-6 text-sm text-slate-500">No experiences logged yet.</CardContent></Card>}
       </div>
+      <ImageViewerDialog
+        open={imageViewer.open}
+        images={imageViewer.images}
+        index={imageViewer.index}
+        onIndexChange={(index) => setImageViewer((prev) => ({ ...prev, index }))}
+        onOpenChange={(open) => setImageViewer((prev) => ({ ...prev, open }))}
+      />
     </TabsContent>
   );
 }
