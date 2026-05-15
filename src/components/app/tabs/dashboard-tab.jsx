@@ -302,7 +302,7 @@ function RecentExperienceCard({ experience, dish, restaurant, branch, statsView,
 
   return (
     <div className="rounded-[1.25rem] border border-slate-200 bg-white p-3 shadow-sm shadow-slate-200/60 ring-1 ring-slate-100/80 sm:rounded-[1.75rem] sm:p-5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-2">
           <div className="flex items-center gap-2">
             <div className="rounded-full bg-amber-100 p-2 text-amber-700">
@@ -339,6 +339,16 @@ function RecentExperienceCard({ experience, dish, restaurant, branch, statsView,
               </Badge>
             ) : null}
           </div>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${EDIT_BUTTON_STYLE}`} onClick={() => editExperience(experience)} aria-label={`Edit ${dish?.name || "experience"}`}>
+            <Pencil className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Edit</span>
+          </Button>
+          <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${DELETE_BUTTON_STYLE}`} onClick={() => deleteExperience(experience.id)} aria-label={`Delete ${dish?.name || "experience"}`}>
+            <Trash2 className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Delete</span>
+          </Button>
         </div>
       </div>
 
@@ -410,16 +420,6 @@ function RecentExperienceCard({ experience, dish, restaurant, branch, statsView,
         </div>
       ) : null}
 
-      <div className="mt-5 flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 pt-4">
-        <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${EDIT_BUTTON_STYLE}`} onClick={() => editExperience(experience)}>
-          <Pencil className="h-4 w-4 sm:mr-2" />
-          <span className="hidden sm:inline">Edit</span>
-        </Button>
-        <Button variant="outline" size="sm" className={`px-2 sm:px-3 ${DELETE_BUTTON_STYLE}`} onClick={() => deleteExperience(experience.id)}>
-          <Trash2 className="h-4 w-4 sm:mr-2" />
-          <span className="hidden sm:inline">Delete</span>
-        </Button>
-      </div>
     </div>
   );
 }
