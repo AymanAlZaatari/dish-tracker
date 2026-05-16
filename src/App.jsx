@@ -1474,11 +1474,12 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   const hasExactDishRestaurantMatch = data.restaurants.some(
     (restaurant) => restaurant.name.trim().toLowerCase() === dishRestaurantSearch.trim().toLowerCase()
   );
+  const hasDishRestaurantSuggestions = dishRestaurantSuggestions.length > 0;
   const experienceRestaurantSuggestions = rankSuggestions(data.restaurants, experienceRestaurantSearch, (restaurant) => restaurant.name).slice(0, 8);
   const hasExactExperienceRestaurantMatch = data.restaurants.some(
     (restaurant) => restaurant.name.trim().toLowerCase() === experienceRestaurantSearch.trim().toLowerCase()
   );
-  const hasInvalidDishRestaurantSearch = !showInlineRestaurantForDish && dishRestaurantSearch.trim() && !dishForm.restaurantId && !hasExactDishRestaurantMatch;
+  const hasInvalidDishRestaurantSearch = !showInlineRestaurantForDish && dishRestaurantSearch.trim() && !dishForm.restaurantId && !hasExactDishRestaurantMatch && !hasDishRestaurantSuggestions;
 
   function buildEmptyRestaurantForm() {
     return {
@@ -1773,7 +1774,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                               onFocus={() => setShowDishRestaurantSuggestions(true)}
                               onBlur={() => window.setTimeout(() => setShowDishRestaurantSuggestions(false), 150)}
                               placeholder="Select or search restaurant"
-                              className={dishRestaurantError || hasInvalidDishRestaurantSearch ? "border-red-400 focus-visible:ring-red-400" : ""}
+                              className={dishRestaurantError || hasInvalidDishRestaurantSearch ? "!border-red-500 !ring-1 !ring-red-300 focus-visible:!ring-red-400" : ""}
                             />
                             {showDishRestaurantSuggestions && dishRestaurantSuggestions.length > 0 ? (
                               <div className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-2xl border bg-white shadow-lg">
@@ -1798,6 +1799,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                             ) : null}
                           </div>
                           {dishRestaurantError ? <div className="mt-2 text-sm text-red-600">{dishRestaurantError}</div> : null}
+                          {!dishRestaurantError && hasInvalidDishRestaurantSearch ? <div className="mt-2 text-sm text-red-600">Select an existing restaurant or add a new one.</div> : null}
                           <button type="button" className="mt-2 text-sm text-blue-600 underline" onClick={() => { setShowInlineRestaurantForDish(true); setDishRestaurantSearch(""); setShowDishRestaurantSuggestions(false); setDishForm({ ...dishForm, restaurantId: "", branchId: "none" }); }}>
                             Add a new restaurant now
                           </button>
