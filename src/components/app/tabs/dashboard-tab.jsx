@@ -245,7 +245,7 @@ function RestaurantOverviewCard({ restaurant, dishes, dishesCount, experiencesCo
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 sm:min-w-[10rem]">
-          <div className="flex flex-wrap items-center gap-1 text-xs font-semibold text-slate-900 sm:text-[0.8rem]">
+          <div className="flex flex-col items-start gap-1 text-xs font-semibold text-slate-900 sm:text-[0.8rem]">
             <button
               type="button"
               className="rounded-full px-1 text-emerald-800 underline-offset-4 hover:underline"
@@ -253,8 +253,7 @@ function RestaurantOverviewCard({ restaurant, dishes, dishesCount, experiencesCo
             >
               {dishesCount} dishes
             </button>
-            <span>•</span>
-            <span>{experiencesCount} experiences</span>
+            <span className="px-1">{experiencesCount} experiences</span>
           </div>
         </div>
       </div>
