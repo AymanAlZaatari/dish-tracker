@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { Camera, Pencil, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -88,13 +88,11 @@ export function ExperiencesTab({
                     <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                       {experience.notes ? <div className="text-sm text-slate-700">{experience.notes}</div> : null}
                       {experience.images?.length > 0 ? (
-                        <div className="mt-3 grid grid-cols-2 gap-2">
-                          {experience.images.map((img, index) => (
-                            <button key={img.id} type="button" className="overflow-hidden rounded-2xl border bg-white text-left" onClick={() => openImageViewer(experience.images, index)} aria-label={`Open ${img.name || "experience image"}`}>
-                              <img src={img.dataUrl} alt={img.name} className="h-24 w-full object-cover" />
-                            </button>
-                          ))}
-                        </div>
+                        <ImageCountButton
+                          className={experience.notes ? "mt-3" : ""}
+                          imageCount={experience.images.length}
+                          onClick={() => openImageViewer(experience.images, 0)}
+                        />
                       ) : null}
                     </div>
                   ) : null}
@@ -142,13 +140,11 @@ export function ExperiencesTab({
                           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                             {experience.notes ? <div className="text-sm text-slate-700">{experience.notes}</div> : null}
                             {experience.images?.length > 0 && (
-                              <div className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-4">
-                                {experience.images.map((img, index) => (
-                                  <button key={img.id} type="button" className="overflow-hidden rounded-2xl border bg-white text-left" onClick={() => openImageViewer(experience.images, index)} aria-label={`Open ${img.name || "experience image"}`}>
-                                    <img src={img.dataUrl} alt={img.name} className="h-24 w-full object-cover" />
-                                  </button>
-                                ))}
-                              </div>
+                              <ImageCountButton
+                                className={experience.notes ? "mt-3" : ""}
+                                imageCount={experience.images.length}
+                                onClick={() => openImageViewer(experience.images, 0)}
+                              />
                             )}
                           </div>
                         )}
@@ -199,5 +195,18 @@ export function ExperiencesTab({
         onOpenChange={(open) => setImageViewer((prev) => ({ ...prev, open }))}
       />
     </TabsContent>
+  );
+}
+
+function ImageCountButton({ imageCount, onClick, className = "" }) {
+  return (
+    <button
+      type="button"
+      className={`inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-2.5 py-1 text-xs font-medium text-sky-800 transition hover:bg-sky-100 ${className}`}
+      onClick={onClick}
+    >
+      <Camera className="h-3.5 w-3.5" />
+      <span>{imageCount} image{imageCount === 1 ? "" : "s"}</span>
+    </button>
   );
 }
