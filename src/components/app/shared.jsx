@@ -87,7 +87,7 @@ export function ImageViewerDialog({ open, onOpenChange, images = [], index = 0, 
         </div>
         <div className="mt-3 flex items-center gap-2">
           {canNavigate ? (
-            <Button type="button" variant="outline" size="icon" className="h-10 w-10 shrink-0 border-white/30 bg-white/10 text-white hover:bg-white/20" onClick={showPrevious} aria-label="Previous image">
+            <Button type="button" variant="outline" size="icon" className="h-10 w-10 shrink-0 border-white bg-white text-slate-950 shadow-lg hover:bg-slate-100" onClick={showPrevious} aria-label="Previous image">
               <ChevronLeft className="h-5 w-5" />
             </Button>
           ) : null}
@@ -97,7 +97,7 @@ export function ImageViewerDialog({ open, onOpenChange, images = [], index = 0, 
             ) : null}
           </div>
           {canNavigate ? (
-            <Button type="button" variant="outline" size="icon" className="h-10 w-10 shrink-0 border-white/30 bg-white/10 text-white hover:bg-white/20" onClick={showNext} aria-label="Next image">
+            <Button type="button" variant="outline" size="icon" className="h-10 w-10 shrink-0 border-white bg-white text-slate-950 shadow-lg hover:bg-slate-100" onClick={showNext} aria-label="Next image">
               <ChevronRight className="h-5 w-5" />
             </Button>
           ) : null}
