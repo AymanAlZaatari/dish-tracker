@@ -89,6 +89,12 @@ export function ExperiencesTab({
                     </Badge>
                     {branch ? <Badge variant="secondary">{branch.name}</Badge> : null}
                     {restaurant?.area ? <Badge variant="outline">{restaurant.area}</Badge> : null}
+                    {experience.images?.length > 0 ? (
+                      <ImageCountButton
+                        imageCount={experience.images.length}
+                        onClick={() => openImageViewer(experience.images, 0)}
+                      />
+                    ) : null}
                   </div>
 
                   <div className="grid grid-cols-3 gap-2">
@@ -108,16 +114,9 @@ export function ExperiencesTab({
                     </div>
                   </div>
 
-                  {(experience.notes || experience.images?.length > 0) ? (
+                  {experience.notes ? (
                     <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                      {experience.notes ? <div className="text-sm text-slate-700">{experience.notes}</div> : null}
-                      {experience.images?.length > 0 ? (
-                        <ImageCountButton
-                          className={experience.notes ? "mt-3" : ""}
-                          imageCount={experience.images.length}
-                          onClick={() => openImageViewer(experience.images, 0)}
-                        />
-                      ) : null}
+                      <div className="text-sm text-slate-700">{experience.notes}</div>
                     </div>
                   ) : null}
                 </CardContent>
@@ -169,17 +168,16 @@ export function ExperiencesTab({
                             {experience.orderType}
                           </Badge>
                           {branch && <Badge variant="secondary">{branch.name}</Badge>}
+                          {experience.images?.length > 0 ? (
+                            <ImageCountButton
+                              imageCount={experience.images.length}
+                              onClick={() => openImageViewer(experience.images, 0)}
+                            />
+                          ) : null}
                         </div>
-                        {(experience.notes || experience.images?.length > 0) && (
+                        {experience.notes && (
                           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-                            {experience.notes ? <div className="text-sm text-slate-700">{experience.notes}</div> : null}
-                            {experience.images?.length > 0 && (
-                              <ImageCountButton
-                                className={experience.notes ? "mt-3" : ""}
-                                imageCount={experience.images.length}
-                                onClick={() => openImageViewer(experience.images, 0)}
-                              />
-                            )}
+                            <div className="text-sm text-slate-700">{experience.notes}</div>
                           </div>
                         )}
                       </div>
