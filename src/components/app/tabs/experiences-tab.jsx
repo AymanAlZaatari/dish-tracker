@@ -22,7 +22,7 @@ export function ExperiencesTab({
   restaurantsById,
   branchesById,
   openRestaurant,
-  editDish,
+  openDish,
   editExperience,
   deleteExperience,
 }) {
@@ -50,7 +50,7 @@ export function ExperiencesTab({
                         <button
                           type="button"
                           className="break-words text-left text-xl font-bold text-slate-900 underline-offset-4 hover:text-amber-700 hover:underline"
-                          onClick={() => editDish(dish)}
+                          onClick={() => openDish(dish)}
                         >
                           {dish.name}
                         </button>
@@ -152,7 +152,7 @@ export function ExperiencesTab({
                             <button
                               type="button"
                               className="text-left text-lg font-semibold text-slate-900 underline-offset-4 hover:text-amber-700 hover:underline"
-                              onClick={() => editDish(dish)}
+                              onClick={() => openDish(dish)}
                             >
                               {dish.name}
                             </button>

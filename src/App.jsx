@@ -243,6 +243,7 @@ function RestaurantSafetyControls({ values, onChange, compact = false }) {
 function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout }) {
   const [tab, setTab] = useState("dashboard");
   const [search, setSearch] = useState("");
+  const [selectedDishId, setSelectedDishId] = useState("");
   const [dishReportSearch, setDishReportSearch] = useState("");
   const [showDishNameSuggestions, setShowDishNameSuggestions] = useState(false);
   const [restaurantSearch, setRestaurantSearch] = useState("");
@@ -524,6 +525,8 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   const filteredDishes = useMemo(() => {
     const q = search.trim().toLowerCase();
     return data.dishes.filter((dish) => {
+      if (selectedDishId && dish.id !== selectedDishId) return false;
+
       const restaurant = restaurantsById[dish.restaurantId];
       const haystack = [
         dish.name,
@@ -545,7 +548,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
       if (statusFilter === "tried" && dish.isWishlist) return false;
       return true;
     });
-  }, [data.dishes, restaurantsById, search, restaurantFilter, areaFilter, cuisineFilter, statusFilter]);
+  }, [data.dishes, restaurantsById, search, restaurantFilter, areaFilter, cuisineFilter, statusFilter, selectedDishId]);
 
   const filteredRestaurants = useMemo(() => {
     const q = restaurantSearch.trim().toLowerCase();
@@ -1320,6 +1323,21 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   function updateRestaurantSearch(value) {
     setSelectedRestaurantId("");
     setRestaurantSearch(value);
+  }
+
+  function openDishFromExperience(dish) {
+    setSelectedDishId(dish?.id || "");
+    setSearch(dish?.name || "");
+    setRestaurantFilter("all");
+    setAreaFilter("all");
+    setCuisineFilter("all");
+    setStatusFilter("all");
+    setTab("dishes");
+  }
+
+  function updateDishSearch(value) {
+    setSelectedDishId("");
+    setSearch(value);
   }
 
   function openNewExperienceDialog() {
@@ -2307,7 +2325,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
             openExistingDish={openExistingDish}
             prepareLogExperience={prepareLogExperience}
             search={search}
-            setSearch={setSearch}
+            setSearch={updateDishSearch}
             restaurantFilter={restaurantFilter}
             setRestaurantFilter={setRestaurantFilter}
             dishFilterRestaurantOptions={dishFilterRestaurantOptions}
@@ -2336,7 +2354,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
             restaurantsById={restaurantsById}
             branchesById={branchesById}
             openRestaurant={openRestaurantFromDashboard}
-            editDish={editDish}
+            openDish={openDishFromExperience}
             editExperience={editExperience}
             deleteExperience={deleteExperience}
           />
