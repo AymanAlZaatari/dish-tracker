@@ -21,6 +21,7 @@ export function ExperiencesTab({
   dishesById,
   restaurantsById,
   branchesById,
+  editRestaurant,
   editDish,
   editExperience,
   deleteExperience,
@@ -56,7 +57,17 @@ export function ExperiencesTab({
                       ) : (
                         <div className="break-words text-xl font-bold text-slate-900">Unknown dish</div>
                       )}
-                      <div className="mt-1 text-sm font-medium text-slate-600">{restaurant?.name || "Unknown restaurant"}</div>
+                      {restaurant ? (
+                        <button
+                          type="button"
+                          className="mt-1 block text-left text-sm font-medium text-slate-600 underline-offset-4 hover:text-indigo-700 hover:underline"
+                          onClick={() => editRestaurant(restaurant)}
+                        >
+                          {restaurant.name}
+                        </button>
+                      ) : (
+                        <div className="mt-1 text-sm font-medium text-slate-600">Unknown restaurant</div>
+                      )}
                       <div className="mt-1 text-xs text-slate-500">{experience.date}</div>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
@@ -172,7 +183,17 @@ export function ExperiencesTab({
                       </div>
                     </td>
                     <td className="px-5 py-4 text-center text-slate-700">
-                      <div className="font-medium text-slate-900">{restaurant?.name || "Unknown restaurant"}</div>
+                      {restaurant ? (
+                        <button
+                          type="button"
+                          className="font-medium text-slate-900 underline-offset-4 hover:text-indigo-700 hover:underline"
+                          onClick={() => editRestaurant(restaurant)}
+                        >
+                          {restaurant.name}
+                        </button>
+                      ) : (
+                        <div className="font-medium text-slate-900">Unknown restaurant</div>
+                      )}
                       {restaurant?.area || restaurant?.cuisines?.length ? (
                         <div className="mt-1 text-sm text-slate-500">
                           {restaurant?.area || "No area"}
