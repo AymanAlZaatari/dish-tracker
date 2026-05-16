@@ -150,7 +150,7 @@ export function ExperiencesTab({
                         )}
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-slate-700">
+                    <td className="px-5 py-4 text-center text-slate-700">
                       <div className="font-medium text-slate-900">{restaurant?.name || "Unknown restaurant"}</div>
                       {restaurant?.area || restaurant?.cuisines?.length ? (
                         <div className="mt-1 text-sm text-slate-500">
