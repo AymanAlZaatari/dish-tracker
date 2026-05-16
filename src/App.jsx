@@ -246,6 +246,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   const [dishReportSearch, setDishReportSearch] = useState("");
   const [showDishNameSuggestions, setShowDishNameSuggestions] = useState(false);
   const [restaurantSearch, setRestaurantSearch] = useState("");
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState("");
   const [restaurantAreaFilter, setRestaurantAreaFilter] = useState("all");
   const [restaurantCityFilter, setRestaurantCityFilter] = useState("all");
   const [restaurantCuisineFilter, setRestaurantCuisineFilter] = useState("all");
@@ -550,6 +551,8 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
     const q = restaurantSearch.trim().toLowerCase();
 
     return data.restaurants.map((restaurant) => restaurantsById[restaurant.id] || restaurant).filter((restaurant) => {
+      if (selectedRestaurantId && restaurant.id !== selectedRestaurantId) return false;
+
       const restaurantBranches = data.branches.filter((branch) => branch.restaurantId === restaurant.id);
       const restaurantDishes = data.dishes.filter((dish) => dish.restaurantId === restaurant.id);
 
@@ -572,7 +575,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
       if (restaurantSafetyFilters.some((fieldKey) => normalizeTriState(restaurant[fieldKey]) !== TRI_STATE_VALUES.YES)) return false;
       return true;
     });
-  }, [data.branches, data.dishes, data.restaurants, restaurantAreaFilter, restaurantCityFilter, restaurantCuisineFilter, restaurantSafetyFilters, restaurantSearch, restaurantsById]);
+  }, [data.branches, data.dishes, data.restaurants, restaurantAreaFilter, restaurantCityFilter, restaurantCuisineFilter, restaurantSafetyFilters, restaurantSearch, restaurantsById, selectedRestaurantId]);
 
   const dashboardStats = useMemo(() => {
     const triedDishes = data.dishes.filter((d) => !d.isWishlist).length;
@@ -1305,12 +1308,18 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
   }
 
   function openRestaurantFromDashboard(restaurant) {
+    setSelectedRestaurantId(restaurant?.id || "");
     setRestaurantSearch(restaurant?.name || "");
     setRestaurantCityFilter("all");
     setRestaurantAreaFilter("all");
     setRestaurantCuisineFilter("all");
     setRestaurantSafetyFilters([]);
     setTab("restaurants");
+  }
+
+  function updateRestaurantSearch(value) {
+    setSelectedRestaurantId("");
+    setRestaurantSearch(value);
   }
 
   function openNewExperienceDialog() {
@@ -2261,7 +2270,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
             data={data}
             areaOptions={areaOptions}
             restaurantSearch={restaurantSearch}
-            setRestaurantSearch={setRestaurantSearch}
+            setRestaurantSearch={updateRestaurantSearch}
             restaurantCityFilter={restaurantCityFilter}
             setRestaurantCityFilter={setRestaurantCityFilter}
             restaurantFilterCityOptions={restaurantFilterCityOptions}
