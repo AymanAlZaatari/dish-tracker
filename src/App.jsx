@@ -642,7 +642,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
 
   function seedSampleData() {
     if (typeof window !== "undefined") {
-      const confirmed = window.confirm("Load seed data? This will replace the data currently shown in the app.");
+      const confirmed = window.confirm("Load seed data? This will replace the data currently shown in the app. Export a backup first if you want to keep your current data.");
       if (!confirmed) return;
     }
 

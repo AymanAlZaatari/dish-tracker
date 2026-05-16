@@ -477,10 +477,10 @@ export function SettingsTab(props) {
             <div>The browser local copy is kept only as a migration and backup convenience, not as the primary source of truth.</div>
             <div className="flex flex-wrap gap-2 pt-2">
               <Button type="button" variant="outline" className={TOP_ACTION_BUTTON_STYLES.export} onClick={exportJson}>
-                <Download className="mr-2 h-4 w-4" /> Export JSON
+                <Upload className="mr-2 h-4 w-4" /> Export JSON
               </Button>
               <Button type="button" variant="outline" className={TOP_ACTION_BUTTON_STYLES.import} onClick={() => importRef.current?.click()}>
-                <Upload className="mr-2 h-4 w-4" /> Import JSON
+                <Download className="mr-2 h-4 w-4" /> Import JSON
               </Button>
               <input ref={importRef} type="file" accept="application/json" className="hidden" onChange={importJson} />
               <Button type="button" variant="outline" className={TOP_ACTION_BUTTON_STYLES.seed} onClick={seedSampleData}>
