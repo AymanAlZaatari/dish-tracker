@@ -14,7 +14,7 @@ import {
 } from "@/lib/app/constants";
 import { ratingPillClass, valuePillClass } from "@/lib/app/data";
 
-import { ImageViewerDialog, Stars } from "../shared";
+import { ImageViewerDialog, Stars, ValueForMoneyLabel } from "../shared";
 
 export function ExperiencesTab({
   data,
@@ -98,7 +98,9 @@ export function ExperiencesTab({
                     </div>
                     <div className={`min-w-0 rounded-2xl border p-3 text-center ${valuePillClass(experience.valueForMoney)}`}>
                       <div className="text-[0.7rem] font-bold uppercase text-slate-500">$ Worth</div>
-                      <div className="mt-1 text-sm font-bold text-slate-900">{experience.valueForMoney || "—"}</div>
+                      <div className="mt-1 flex justify-center text-sm font-bold text-slate-900">
+                        <ValueForMoneyLabel value={experience.valueForMoney} className="justify-center" />
+                      </div>
                     </div>
                     <div className={`min-w-0 rounded-2xl border p-3 text-center ${ratingPillClass(experience.rating)}`}>
                       <div className="text-[0.7rem] font-bold uppercase text-slate-500">Rating</div>
@@ -206,7 +208,7 @@ export function ExperiencesTab({
                     </td>
                     <td className="px-5 py-4 text-center text-slate-700">
                       <div className={`inline-flex items-center rounded-full border px-3 py-1 text-[0.8rem] font-semibold ${valuePillClass(experience.valueForMoney)}`}>
-                        {experience.valueForMoney || "—"}
+                        <ValueForMoneyLabel value={experience.valueForMoney} />
                       </div>
                     </td>
                     <td className="px-5 py-4">

@@ -18,7 +18,7 @@ import {
 } from "@/lib/app/constants";
 import { ratingPillClass, tagChipStyle } from "@/lib/app/data";
 
-import { Stars } from "../shared";
+import { Stars, ValueForMoneyLabel } from "../shared";
 
 export function DishesTab({
   dishReportSearch,
@@ -297,7 +297,12 @@ export function DishesTab({
                           </Badge>
                         ) : null}
                       </div>
-                      {experience.valueForMoney ? <div className="mt-3 text-sm font-medium text-slate-700">Value: {experience.valueForMoney}</div> : null}
+                      {experience.valueForMoney ? (
+                        <div className="mt-3 flex items-center gap-2 text-sm font-medium text-slate-700">
+                          <span>Value:</span>
+                          <ValueForMoneyLabel value={experience.valueForMoney} />
+                        </div>
+                      ) : null}
                       {experience.notes ? <div className="mt-3 rounded-xl bg-slate-50 px-3 py-2 text-sm text-slate-700">{experience.notes}</div> : null}
                     </div>
                   );

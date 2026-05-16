@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Star, X } from "lucide-react";
+import { BadgeDollarSign, ChevronLeft, ChevronRight, CircleX, Gem, Star, TrendingUp, Trophy, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -57,6 +57,25 @@ export function Stars({ value, size = "md" }) {
         <Star key={i} className={`${starSizeClass} ${i < Math.round(n) ? "fill-current text-yellow-500" : "text-slate-300"}`} />
       ))}
     </div>
+  );
+}
+
+const VALUE_FOR_MONEY_ICONS = {
+  "Hidden gem": Gem,
+  "A win": Trophy,
+  "Fairly priced": BadgeDollarSign,
+  Overpriced: TrendingUp,
+  "Rip-off": CircleX,
+};
+
+export function ValueForMoneyLabel({ value, fallback = "—", className = "", iconClassName = "h-3.5 w-3.5" }) {
+  if (!value) return <span className={className}>{fallback}</span>;
+  const Icon = VALUE_FOR_MONEY_ICONS[value] || BadgeDollarSign;
+  return (
+    <span className={`inline-flex min-w-0 items-center gap-1.5 ${className}`}>
+      <Icon className={`${iconClassName} shrink-0`} aria-hidden="true" />
+      <span className="min-w-0">{value}</span>
+    </span>
   );
 }
 

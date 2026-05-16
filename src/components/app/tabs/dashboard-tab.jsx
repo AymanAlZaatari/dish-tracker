@@ -18,7 +18,7 @@ import {
 } from "@/lib/app/constants";
 import { normalizeMusicLevel, normalizeTriState, ratingPillClass, valuePillClass } from "@/lib/app/data";
 
-import { ImageViewerDialog, Stars } from "../shared";
+import { ImageViewerDialog, Stars, ValueForMoneyLabel } from "../shared";
 
 const MOBILE_CARD_TITLE_CLASS = "text-[1.12rem] font-bold text-slate-900 sm:text-lg";
 const MOBILE_CARD_META_CLASS = "text-[0.8rem] font-medium text-slate-500 sm:text-sm";
@@ -381,7 +381,7 @@ function RecentExperienceCard({ experience, dish, restaurant, branch, statsView,
               <div className="border-t border-slate-200" />
               <InlineMetricRow
                 label="$ Worth"
-                value={hasValue ? experience.valueForMoney : "—"}
+                value={<ValueForMoneyLabel value={hasValue ? experience.valueForMoney : ""} />}
                 className={valuePillClass(experience.valueForMoney)}
               />
             </div>
@@ -405,7 +405,7 @@ function RecentExperienceCard({ experience, dish, restaurant, branch, statsView,
               </ExperienceMetricCard>
               <ExperienceMetricCard
                 label="$ Worth"
-                value={hasValue ? experience.valueForMoney : "—"}
+                value={<ValueForMoneyLabel value={hasValue ? experience.valueForMoney : ""} className="justify-center" />}
                 icon={<Sparkles className="h-4 w-4" />}
                 className={valuePillClass(experience.valueForMoney)}
                 valueClassName="text-[1.08rem] sm:text-lg"

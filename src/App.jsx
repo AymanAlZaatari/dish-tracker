@@ -73,7 +73,7 @@ import {
   uid,
   valuePillClass,
 } from "./lib/app/data";
-import { Field, ModalActions, ModalHeader, Stars, TagInput } from "./components/app/shared";
+import { Field, ModalActions, ModalHeader, Stars, TagInput, ValueForMoneyLabel } from "./components/app/shared";
 import { AuthScreen, LoadingScreen, SetupRequiredScreen } from "./components/app/screens";
 import { DashboardTab } from "./components/app/tabs/dashboard-tab";
 import { DishesTab } from "./components/app/tabs/dishes-tab";
@@ -1932,7 +1932,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                               <SelectTrigger><SelectValue placeholder="Select value" /></SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="__none">No answer</SelectItem>
-                                {VALUE_OPTIONS.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+                                {VALUE_OPTIONS.map((option) => <SelectItem key={option} value={option}><ValueForMoneyLabel value={option} /></SelectItem>)}
                               </SelectContent>
                             </Select>
                           </Field>
@@ -2169,7 +2169,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
                         <SelectTrigger><SelectValue placeholder="Select value" /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="__none">No answer</SelectItem>
-                          {VALUE_OPTIONS.map((option) => <SelectItem key={option} value={option}>{option}</SelectItem>)}
+                          {VALUE_OPTIONS.map((option) => <SelectItem key={option} value={option}><ValueForMoneyLabel value={option} /></SelectItem>)}
                         </SelectContent>
                       </Select>
                     </Field>
