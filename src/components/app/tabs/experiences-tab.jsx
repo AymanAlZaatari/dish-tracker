@@ -21,6 +21,7 @@ export function ExperiencesTab({
   dishesById,
   restaurantsById,
   branchesById,
+  editDish,
   editExperience,
   deleteExperience,
 }) {
@@ -44,7 +45,17 @@ export function ExperiencesTab({
                 <CardContent className="space-y-4 p-4">
                   <div className="flex min-w-0 items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <div className="break-words text-xl font-bold text-slate-900">{dish?.name || "Unknown dish"}</div>
+                      {dish ? (
+                        <button
+                          type="button"
+                          className="break-words text-left text-xl font-bold text-slate-900 underline-offset-4 hover:text-amber-700 hover:underline"
+                          onClick={() => editDish(dish)}
+                        >
+                          {dish.name}
+                        </button>
+                      ) : (
+                        <div className="break-words text-xl font-bold text-slate-900">Unknown dish</div>
+                      )}
                       <div className="mt-1 text-sm font-medium text-slate-600">{restaurant?.name || "Unknown restaurant"}</div>
                       <div className="mt-1 text-xs text-slate-500">{experience.date}</div>
                     </div>
@@ -124,7 +135,17 @@ export function ExperiencesTab({
                     <td className="px-5 py-4">
                       <div className="min-w-0 space-y-2">
                         <div>
-                          <div className="text-lg font-semibold text-slate-900">{dish?.name || "Unknown dish"}</div>
+                          {dish ? (
+                            <button
+                              type="button"
+                              className="text-left text-lg font-semibold text-slate-900 underline-offset-4 hover:text-amber-700 hover:underline"
+                              onClick={() => editDish(dish)}
+                            >
+                              {dish.name}
+                            </button>
+                          ) : (
+                            <div className="text-lg font-semibold text-slate-900">Unknown dish</div>
+                          )}
                           <div className="text-sm text-slate-500">{experience.date}</div>
                         </div>
                         <div className="flex flex-wrap gap-2">
