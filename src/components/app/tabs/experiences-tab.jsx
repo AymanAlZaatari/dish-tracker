@@ -21,7 +21,7 @@ export function ExperiencesTab({
   dishesById,
   restaurantsById,
   branchesById,
-  editRestaurant,
+  openRestaurant,
   editDish,
   editExperience,
   deleteExperience,
@@ -61,7 +61,7 @@ export function ExperiencesTab({
                         <button
                           type="button"
                           className="mt-1 block text-left text-sm font-medium text-slate-600 underline-offset-4 hover:text-indigo-700 hover:underline"
-                          onClick={() => editRestaurant(restaurant)}
+                          onClick={() => openRestaurant(restaurant)}
                         >
                           {restaurant.name}
                         </button>
@@ -189,7 +189,7 @@ export function ExperiencesTab({
                         <button
                           type="button"
                           className="font-medium text-slate-900 underline-offset-4 hover:text-indigo-700 hover:underline"
-                          onClick={() => editRestaurant(restaurant)}
+                          onClick={() => openRestaurant(restaurant)}
                         >
                           {restaurant.name}
                         </button>

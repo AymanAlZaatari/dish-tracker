@@ -2335,7 +2335,7 @@ function DishTrackerAppContent({ data, setData, userEmail, cloudStatus, onLogout
             dishesById={dishesById}
             restaurantsById={restaurantsById}
             branchesById={branchesById}
-            editRestaurant={editRestaurant}
+            openRestaurant={openRestaurantFromDashboard}
             editDish={editDish}
             editExperience={editExperience}
             deleteExperience={deleteExperience}
